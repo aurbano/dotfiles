@@ -52,6 +52,9 @@ $b zsh-users/zsh-syntax-highlighting
 # colors for all files!
 $b trapd00r/zsh-syntax-highlighting-filetypes
 
+# color man pages
+$b colored-man
+
 # dont set a theme, because pure does it all
 $b mafredri/zsh-async
 $b sindresorhus/pure

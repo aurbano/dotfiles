@@ -7,6 +7,8 @@ SAVEHIST=100000
 # vim bindings
 bindkey -v
 
+# activate github.com/sickill/stderred
+export DYLD_INSERT_LIBRARIES="/Users/alex/dotfiles/bin/stderred/build/libstderred.dylib${DYLD_INSERT_LIBRARIES:+:$DYLD_INSERT_LIBRARIES}"
 
 fpath=( "$HOME/.zfunctions" $fpath )
 

@@ -7,6 +7,9 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+alias p="ps -m -o pid,user,%mem,args"
+alias ptree="pstree -u $USER -g 3 -s \"root (login)\""
+
 alias grep="grep --color"
 
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"

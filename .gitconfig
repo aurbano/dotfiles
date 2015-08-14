@@ -78,3 +78,6 @@
 [include]
   # For username / github token / etc
   path = ~/.gitconfig.local
+[user]
+	name = Alejandro U. Alvarez
+	email = aluralma@gmail.com

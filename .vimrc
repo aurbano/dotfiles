@@ -103,6 +103,9 @@ set wildmode=list:longest " Complete only until point of ambiguity
 set winminheight=0 " Allow splits to be reduced to a single line
 set wrapscan " Searches wrap around end of file
 set completeopt=menuone,longest,preview
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 " }}}
 
 " }}}
@@ -446,7 +449,7 @@ augroup filetype_coffee
 augroup END
 " }}}
 
-" Fish {{{
+"Fish {{{
 augroup filetype_fish
   autocmd!
   au BufRead,BufNewFile *.fish set ft=fish
@@ -531,12 +534,18 @@ augroup END
 augroup airline_config
   autocmd!
   let g:airline_powerline_fonts = 1
-  let g:airline_enable_syntastic = 1
+  let g:airline#extensions#syntastic#enabled = 1
   let g:airline#extensions#tabline#buffer_nr_format = '%s '
   let g:airline#extensions#tabline#buffer_nr_show = 1
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamecollapse = 0
   let g:airline#extensions#tabline#fnamemod = ':t'
+  " vim-airline
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline_powerline_fonts = 1
+
+  " Tabs
+  let g:airline_theme='badwolf'
 augroup END
 " }}}
 
@@ -605,6 +614,10 @@ augroup syntastic_config
   let g:syntastic_error_symbol = '✗'
   let g:syntastic_warning_symbol = '⚠'
   let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_check_on_wq = 0
 augroup END
 " }}}
 
@@ -652,6 +665,9 @@ Plug 'xolox/vim-notes'
 call plug#end()
 " }}}
 
+" Run pathogen
+execute pathogen#infect()
+
 " Run bundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -679,11 +695,3 @@ let g:UltiSnipsExpandTrigger="<f1>"
 let g:UltiSnipsJumpForwardTrigger="<f1>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 let g:did_UltiSnips_vim_after = 1
-
-" vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-" Tabs
-let g:airline_theme='badwolf'
-let g:airline#extensions#tabline#enabled = 1

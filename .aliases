@@ -9,6 +9,8 @@ alias -- -="cd -"
 
 alias p="ps -m -o pid,user,%mem,args"
 alias ptree="pstree -u $USER -g 3 -s \"root (login)\""
+# setup thefuck aliases https://github.com/nvbn/thefuck
+eval "$(thefuck --alias)"
 
 alias grep="grep --color"
 

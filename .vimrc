@@ -102,6 +102,7 @@ set wildmenu " Hitting TAB in command mode will show possible completions above 
 set wildmode=list:longest " Complete only until point of ambiguity
 set winminheight=0 " Allow splits to be reduced to a single line
 set wrapscan " Searches wrap around end of file
+set completeopt=menuone,longest,preview
 " }}}
 
 " }}}
@@ -539,7 +540,7 @@ augroup airline_config
 augroup END
 " }}}
 
-" CtrlP.vim {{{
+"CtrlP.vim {{{
 augroup ctrlp_config
   autocmd!
   let g:ctrlp_clear_cache_on_exit = 0 " Do not clear filenames cache, to improve CtrlP startup
@@ -610,7 +611,7 @@ augroup END
 
 " Plugins -------------------------------------------------------------
 
-" Load plugins {{{
+"Load plugins {{{
 call plug#begin('~/.vim/plugged')
 
 Plug 'ap/vim-css-color'
@@ -650,3 +651,39 @@ Plug 'xolox/vim-notes'
 
 call plug#end()
 " }}}
+
+" Run bundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+
+Bundle 'tpope/vim-surround'
+Bundle 'gcmt/breeze.vim'
+Bundle 'kien/ctrlp.vim'
+Bundle 'SirVer/ultisnips'
+Bundle 'tomtom/tcomment_vim'
+Bundle 'bling/vim-airline'
+Bundle 'airblade/vim-gitgutter'
+
+" Color Themes
+Bundle 'flazz/vim-colorschemes'
+"colorscheme Monokai
+
+if has('autocmd')
+    filetype plugin indent on
+endif
+
+" Ultisnip
+" NOTE: <f1> otherwise it overrides <tab> forever
+let g:UltiSnipsExpandTrigger="<f1>"
+let g:UltiSnipsJumpForwardTrigger="<f1>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:did_UltiSnips_vim_after = 1
+
+" vim-airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Tabs
+let g:airline_theme='badwolf'
+let g:airline#extensions#tabline#enabled = 1

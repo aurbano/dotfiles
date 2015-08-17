@@ -1,11 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/Users/alex'
-let g:netrw_dirhist_2='/Users/alex/dotfiles'
-let g:netrw_dirhist_3='/Users/alex/dotfiles/.vim'
-let g:netrw_dirhist_4='/Users/alex'
-let g:netrw_dirhist_5='/Users/alex/.adobe'
-let g:netrw_dirhist_6='/Users/alex'
-let g:netrw_dirhist_7='/Users'
-let g:netrw_dirhist_8='/'
-let g:netrw_dirhist_9='/Users/alex/dotfiles'
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/Users/alex/dotfiles'
+let g:netrw_dirhist_2='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js'
+let g:netrw_dirhist_3='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js/app'
+let g:netrw_dirhist_4='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js'
+let g:netrw_dirhist_5='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js/app'

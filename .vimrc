@@ -35,7 +35,7 @@ set encoding=utf-8 nobomb " BOM often causes trouble
 set esckeys " Allow cursor keys in insert mode
 set expandtab " Expand tabs to spaces
 set foldcolumn=0 " Column to show folds
-set foldenable " Enable folding
+set nofoldenable " Enable folding
 set foldlevel=0 " Close all folds by default
 set foldmethod=syntax " Syntax are used to specify folds
 set foldminlines=0 " Allow folding single lines
@@ -117,74 +117,71 @@ set statusline+=%*
 " FastEscape {{{
 " Speed up transition from modes
 if ! has('gui_running')
-  set ttimeoutlen=10
-  augroup FastEscape
-    autocmd!
-    au InsertEnter * set timeoutlen=0
-    au InsertLeave * set timeoutlen=1000
-  augroup END
+set ttimeoutlen=10
+augroup FastEscape
+  autocmd!
+  au InsertEnter * set timeoutlen=0
+  au InsertLeave * set timeoutlen=1000
+augroup END
 endif
 " }}}
 
 " General {{{
 augroup general_config
-  autocmd!
+autocmd!
 
-  " Speed up viewport scrolling {{{
-  nnoremap <C-e> 3<C-e>
-  nnoremap <C-y> 3<C-y>
-  " }}}
+" Speed up viewport scrolling {{{
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>
+" }}}
 
-  " Faster split resizing (+,-) {{{
-  if bufwinnr(1)
-    map + <C-W>+
-    map - <C-W>-
-  endif
-  " }}}
+" Faster split resizing (+,-) {{{
+if bufwinnr(1)
+  map + <C-W>+
+  map - <C-W>-
+endif
+" }}}
 
-  " Better split switching (Ctrl-j, Ctrl-k, Ctrl-h, Ctrl-l) {{{
-  map <C-j> <C-W>j
-  map <C-k> <C-W>k
-  map <C-H> <C-W>h
-  map <C-L> <C-W>l
-  " }}}
+" Better split switching (Ctrl-j, Ctrl-k, Ctrl-h, Ctrl-l) {{{
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-H> <C-W>h
+map <C-L> <C-W>l
+" }}}
 
-  " Sudo write (,W) {{{
-  noremap <leader>W :w !sudo tee %<CR>
-  " }}}
+" Sudo write (,W) {{{
+noremap <leader>W :w !sudo tee %<CR>
+" }}}
 
-  " Get output of shell commands {{{
-  command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
-  " }}}
+" Get output of shell commands {{{
+command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
+" }}}
 
-  " Remap :W to :w {{{
-  command! W w
-  " }}}
+" Remap :W to :w {{{
+command! W w
+" }}}
 
-  " Better mark jumping (line + col) {{{
-  nnoremap ' `
-  " }}}
+" Better mark jumping (line + col) {{{
+nnoremap ' `
+" }}}
 
-  " Hard to type things {{{
-  iabbrev >> →
-  iabbrev << ←
-  iabbrev ^^ ↑
-  iabbrev VV ↓
-  iabbrev aa λ
-  " }}}
+" Compile C++ from Vim {{{
+nnoremap <F5> :<C-U>make %:r && ./%:r<CR>
+" }}}
 
-  " Toggle show tabs and trailing spaces (,c) {{{
+
+" Toggle show tabs and trailing spaces (,c) {{{
   set lcs=tab:›\ ,trail:·,eol:¬,nbsp:_
   set fcs=fold:-
   nnoremap <silent> <leader>c :set nolist!<CR>
-  " }}}
+ " }}}
 
-  " Clear last search (,qs) {{{
+ " Clear last search (,qs) {{{
   map <silent> <leader>qs <Esc>:noh<CR>
   " map <silent> <leader>qs <Esc>:let @/ = ""<CR>
-  " }}}
+ " }}}
 
-  " Vim on the iPad {{{
+ " Vim on the iPad {{{
   if &term == "xterm-ipad"
     nnoremap <Tab> <Esc>
     vnoremap <Tab> <Esc>gV

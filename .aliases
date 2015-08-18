@@ -13,6 +13,7 @@ alias ptree="pstree -u $USER -g 3 -s \"root (login)\""
 eval "$(thefuck --alias)"
 alias stripcolors='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g"'
 alias psa="ps aux | grep $1"
+alias ipinfo="curl ipinfo.io/$1"
 
 alias grep="grep --color"
 

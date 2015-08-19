@@ -678,6 +678,7 @@ Bundle 'SirVer/ultisnips'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'bling/vim-airline'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'Valloric/YouCompleteMe'
 
 " Color Themes
 Bundle 'flazz/vim-colorschemes'

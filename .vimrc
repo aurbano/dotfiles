@@ -681,6 +681,11 @@ Bundle 'bling/vim-airline'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'honza/vim-snippets'
+Bundle 'rdnetto/YCM-Generator'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'pangloss/vim-javascript'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'Raimondi/delimitMate'
 
 " Color Themes
 Bundle 'flazz/vim-colorschemes'
@@ -696,3 +701,12 @@ let g:UltiSnipsExpandTrigger="<c-space>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:did_UltiSnips_vim_after = 1
+
+" indent guides
+set ts=4 sw=4 et
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+
+" highlight the last column that I like to use
+set colorcolumn=110
+highlight ColorColumn ctermbg=darkgray

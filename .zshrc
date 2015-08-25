@@ -12,6 +12,7 @@ export DYLD_INSERT_LIBRARIES="/Users/alex/dotfiles/bin/stderred/build/libstderre
 
 fpath=( "$HOME/.zfunctions" $fpath )
 
+export PATH="/usr/local/sbin:$PATH"
 
 # antigen time!
 source ~/code/antigen/antigen.zsh

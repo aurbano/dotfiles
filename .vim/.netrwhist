@@ -1,9 +1,2 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/Users/alex/dotfiles'
-let g:netrw_dirhist_2='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js'
-let g:netrw_dirhist_3='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js/app'
-let g:netrw_dirhist_4='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js'
-let g:netrw_dirhist_5='/Users/alex/Proyects/DJsMusic/DJsMusic-Client/js/app'
-let g:netrw_dirhist_6='/Users/alex/.pow'
-let g:netrw_dirhist_7='/Users/alex/.pow/djsmusic-client'
+let g:netrw_dirhist_cnt =0

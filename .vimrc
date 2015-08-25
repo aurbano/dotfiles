@@ -686,6 +686,7 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'pangloss/vim-javascript'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Raimondi/delimitMate'
+Bundle 'povilasb/vim-cpp-header-generator'
 
 " Color Themes
 Bundle 'flazz/vim-colorschemes'

@@ -20,6 +20,9 @@ brew install gnu-sed --default-names
 
 brew install pstree
 
+# Cool bash git display
+brew install michaeldfallen/formula/git-radar
+
 # Bash 4
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before running `chsh`.
 brew install bash

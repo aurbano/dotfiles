@@ -8,7 +8,7 @@ SAVEHIST=100000
 bindkey -v
 
 # activate github.com/sickill/stderred
-export DYLD_INSERT_LIBRARIES="/Users/alex/dotfiles/bin/stderred/build/libstderred.dylib${DYLD_INSERT_LIBRARIES:+:$DYLD_INSERT_LIBRARIES}"
+#export DYLD_INSERT_LIBRARIES="/Users/alex/dotfiles/bin/stderred/build/libstderred.dylib${DYLD_INSERT_LIBRARIES:+:$DYLD_INSERT_LIBRARIES}"
 
 fpath=( "$HOME/.zfunctions" $fpath )
 
@@ -33,8 +33,6 @@ $b command-not-found
 # Helper for extracting different types of archives.
 $b extract
 
-# atom editor
-$b atom
 
 # homebrew  - autocomplete on `brew install`
 $b brew
@@ -54,9 +52,6 @@ $b zsh-users/zsh-syntax-highlighting
 
 # colors for all files!
 $b trapd00r/zsh-syntax-highlighting-filetypes
-
-# color man pages
-$b colored-man
 
 # dont set a theme, because pure does it all
 $b mafredri/zsh-async

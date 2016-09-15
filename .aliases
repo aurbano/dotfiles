@@ -7,6 +7,10 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+# Docker
+alias d=docker
+alias dc="docker-compose"
+
 alias p="ps -m -o pid,user,%mem,args"
 alias ptree="pstree -u $USER -g 3 -s \"root (login)\""
 # setup thefuck aliases https://github.com/nvbn/thefuck

@@ -8,8 +8,8 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Docker
-alias d=docker
-alias dc="docker-compose"
+alias dk=docker
+alias dkc="docker-compose"
 
 alias p="ps -m -o pid,user,%mem,args"
 alias ptree="pstree -u $USER -g 3 -s \"root (login)\""

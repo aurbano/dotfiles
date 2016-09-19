@@ -30,6 +30,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
+	pager = diff-so-fancy | less --tabs=1,5 -R
 [color "branch"]
 	current = yellow reverse
 	local = yellow
@@ -81,3 +82,5 @@
 [user]
 	name = Alejandro U. Alvarez
 	email = aluralma@gmail.com
+[credential]
+	helper = osxkeychain

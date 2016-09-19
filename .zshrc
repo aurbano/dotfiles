@@ -30,9 +30,6 @@ $b command-not-found
 # Helper for extracting different types of archives.
 $b extract
 
-# atom editor
-$b atom
-
 # homebrew  - autocomplete on `brew install`
 $b brew
 $b brew-cask
@@ -51,9 +48,6 @@ $b zsh-users/zsh-syntax-highlighting
 
 # colors for all files!
 $b trapd00r/zsh-syntax-highlighting-filetypes
-
-# color man pages
-$b colored-man
 
 # dont set a theme, because pure does it all
 $b mafredri/zsh-async
@@ -102,3 +96,4 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 # Load default dotfiles
 source ~/.bash_profile
 
+source /usr/local/share/zsh/site-functions/yo

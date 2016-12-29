@@ -542,9 +542,6 @@ augroup airline_config
   " vim-airline
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_powerline_fonts = 1
-
-  " Tabs
-  let g:airline_theme='badwolf'
 augroup END
 " }}}
 
@@ -665,38 +662,6 @@ call plug#end()
 
 " Run pathogen
 execute pathogen#infect()
-
-" Run bundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
-
-Bundle 'tpope/vim-surround'
-Bundle 'gcmt/breeze.vim'
-Bundle 'tomtom/tcomment_vim'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'pangloss/vim-javascript'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'Raimondi/delimitMate'
-Bundle 'povilasb/vim-cpp-header-generator'
-Bundle 'vim-airline/vim-airline-themes'
-
-" Color Themes
-Bundle 'flazz/vim-colorschemes'
-"colorscheme Monokai
-
-if has('autocmd')
-    filetype plugin indent on
-endif
-
-" Ultisnip
-" NOTE: <f1> otherwise it overrides <tab> forever
-let g:UltiSnipsExpandTrigger="<c-space>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:did_UltiSnips_vim_after = 1
 
 " indent guides
 set ts=4 sw=4 et

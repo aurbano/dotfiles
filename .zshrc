@@ -96,4 +96,4 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 # Load default dotfiles
 source ~/.bash_profile
 
-source /usr/local/share/zsh/site-functions/yo
+export PATH="$HOME/.yarn/bin:$PATH"

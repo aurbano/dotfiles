@@ -84,3 +84,6 @@
 	email = aluralma@gmail.com
 [credential]
 	helper = osxkeychain
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master

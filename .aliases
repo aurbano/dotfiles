@@ -57,8 +57,6 @@ alias la="ls -l | awk '
 # List only directories
 alias lsd='ls -l | grep "^d"'
 
-
-
 # `cat` with beautiful colors. requires Pygments installed.
 # 							   sudo easy_install -U Pygments
 alias c='pygmentize -O style=monokai -f console256 -g'
@@ -70,8 +68,6 @@ alias undopush="git push -f origin HEAD^:master"
 
 # git root
 alias gr='[ ! -z `git rev-parse --show-cdup` ] && cd `git rev-parse --show-cdup || pwd`'
-
-
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -105,3 +101,6 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done
+
+# SSH shortcuts
+alias sshcs="ssh -i /Volumes/CSA/dev-tools-vpc.pem 10.0.1.162"

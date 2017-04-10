@@ -103,4 +103,4 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 # SSH shortcuts
-alias sshcs="ssh -i /Volumes/CSA/dev-tools-vpc.pem 10.0.1.162"
+alias sshcs="ssh -i /Volumes/CSA/dev-tools-vpc.pem ec2-user@10.0.1.162"

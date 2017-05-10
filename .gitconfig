@@ -7,6 +7,18 @@
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	co = checkout
 
+    prune = fetch --prune
+    # Because I constantly forget how to do this
+    # https://git-scm.com/docs/git-fetch#git-fetch--p
+
+    undo = reset --soft HEAD^
+    # Not quite as common as an amend, but still common
+    # https://git-scm.com/docs/git-reset#git-reset-emgitresetemltmodegtltcommitgt
+
+    stash-all = stash save --include-untracked
+    # We wanna grab those pesky un-added files!
+    # https://git-scm.com/docs/git-stash
+
 	# Show the diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
@@ -21,8 +33,6 @@
 			git commit --amend -m \"$(git log -1 --pretty=%B)\n\nCloses #$1.\"; \
 		fi \
 	}; f"
-
-
 
 [color]
 	ui = auto
@@ -47,7 +57,6 @@
 [merge]
     tool = opendiff
 
-
 # rewrites
 [url "git@github.com:"]
 	insteadOf = "gh:"
@@ -61,7 +70,6 @@
 	pushInsteadOf = "git://gist.github.com/"
 	pushInsteadOf = "https://gist.github.com/"
 
-
 # Any GitHub repo with my username should be checked out r/w by default
 # http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
 
@@ -73,8 +81,6 @@
 # push easily. http://stackoverflow.com/a/23918418/89484
 [push]
 	default = current
-
-
 
 [include]
   # For username / github token / etc

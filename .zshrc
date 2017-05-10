@@ -97,3 +97,4 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 source ~/.bash_profile
 
 export PATH="$HOME/.yarn/bin:$PATH"
+export PATH="$HOME/Library/Python/2.7/bin:$PATH"

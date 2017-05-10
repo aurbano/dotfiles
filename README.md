@@ -24,8 +24,6 @@ Install vim plugin managers:
 ```bash
 # vundle
 $ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-# pathogen
-$ mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 ```
 
 ```bash
@@ -36,13 +34,14 @@ $ ln -s ~/dotfiles/.vimrc ~/.vimrc
 Now open vim, and run
 
 ```
-:PluginInstall
 :PlugInstall
 ```
 
 This will install the rest of the plugins for you. Then restart vim.
 
-In order to get the right looks you need a [powerline enabled font](https://github.com/powerline/fonts).
+### Font
+
+Download from https://github.com/abertsch/Menlo-for-Powerline
 
 ### Everything else
 The rest of the things are optional and depend on what you need. There are some scripts that automate mostly everything, so maybe open them, decide which parts you like, and delete/comment out the rest:

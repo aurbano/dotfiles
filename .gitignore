@@ -4,10 +4,10 @@
 .vim/swaps/*
 .vim/undo
 
+!.vim/swaps/README
+
 # git credential file 
 .gitconfig.local
-
-
 
 
 # Folder view configuration files

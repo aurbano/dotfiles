@@ -3,6 +3,8 @@
 .vim/viminfo
 .vim/swaps/*
 .vim/undo
+.vim/plugged
+.vim/.netrwhist
 
 !.vim/swaps/README
 

@@ -131,9 +131,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 143 606 456 0 0 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>366 540 918 495 0 0 2560 1417 </string>
+	<string>366 518 918 495 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1632 66 927 1351 0 0 2560 1417 </string>
+	<string>656 64 1256 987 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>343 181 650 449 0 0 2560 1417 </string>
 	<key>New Bookmarks</key>
@@ -854,6 +854,8 @@
 			<false/>
 			<key>Use Italic Font</key>
 			<true/>
+			<key>Use Non-ASCII Font</key>
+			<false/>
 			<key>Vertical Spacing</key>
 			<real>1</real>
 			<key>Visual Bell</key>
@@ -1020,7 +1022,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-04-10T09:51:40Z</date>
+	<date>2017-04-18T23:04:12Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>

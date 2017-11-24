@@ -92,6 +92,7 @@ alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
 # Shortcuts
 alias g="git"
 alias v="vim"
+alias gclean='git branch --merged | grep -v "\*" | grep -v "master" | grep -v "develop" | grep -v "staging" | xargs -n 1 git branch -d'
 
 # File size
 alias fs="stat -f \"%z bytes\""
@@ -106,5 +107,6 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 # SSH shortcuts
-alias sshcs="ssh -i /Volumes/CSA/dev-tools-vpc.pem ec2-user@10.0.1.162"
-alias sshg="ssh -i /Volumes/CSA/dev-tools-vpc.pem ubuntu@10.0.1.219"
+alias sshcsp="ssh -i /Volumes/CSA/dev-tools-vpc.pem ec2-user@prod.cyberstack.uk"
+alias sshcsd="ssh -i /Volumes/CSA/dev-tools-vpc.pem ec2-user@dev.cyberstack.uk"
+alias sshg="ssh -i /Volumes/CSA/dev-tools-vpc.pem ubuntu@gitlab.dev.cyberstack.uk"

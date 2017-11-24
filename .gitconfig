@@ -88,13 +88,13 @@
 [user]
 	name = Alejandro U. Alvarez
 	email = aluralma@gmail.com
-	signingkey = 7C7045D3361CFA66
+    signingkey = 7C7045D3361CFA66
 [credential]
 	helper = osxkeychain
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
 [commit]
-	gpgsign = true
+    #gpgsign = true
 [gpg]
 	program = gpg

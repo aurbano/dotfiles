@@ -1,2 +1,0 @@
-==> Tapping caskroom/cask
-Tapped 1 formula (3,606 files, 13.7M)

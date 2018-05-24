@@ -79,6 +79,7 @@ plugins=(
   sudo
   yarn
   z
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh

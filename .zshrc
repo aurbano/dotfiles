@@ -7,6 +7,10 @@ export ZSH=/Users/alex/dotfiles/oh-my-zsh
 # Pure prompt
 autoload -U promptinit; promptinit
 
+# Improve autocompletion
+fpath=(~/.zsh/completions $fpath)
+autoload -U compinit && compinit
+
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -79,6 +83,7 @@ plugins=(
   sudo
   yarn
   z
+  zsh-completions
   zsh-autosuggestions
 )
 

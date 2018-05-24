@@ -131,7 +131,7 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>258 608 606 456 0 0 2560 1417 </string>
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
-	<string>972 948 616 174 0 0 2560 1417 </string>
+	<string>3532 970 616 174 2560 38 2560 1417 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 143 606 469 0 0 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
@@ -139,7 +139,7 @@
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>230 833 592 584 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1387 65 1172 1352 0 0 2560 1417 </string>
+	<string>1542 65 1018 1352 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>343 181 650 449 0 0 2560 1417 </string>
 	<key>New Bookmarks</key>
@@ -1034,7 +1034,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-02-28T13:59:11Z</date>
+	<date>2018-04-26T09:54:33Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
@@ -1091,6 +1091,8 @@
 	<string>/-+\~_.</string>
 	<key>findIgnoreCase_iTerm</key>
 	<true/>
+	<key>findMode_iTerm</key>
+	<integer>0</integer>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>

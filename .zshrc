@@ -65,9 +65,7 @@ antigen apply
 
 
 # bind UP and DOWN arrow keys for history search
-zmodload zsh/terminfo
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
+source ~/dotfiles/bindkeys.zsh
 
 export PURE_GIT_UNTRACKED_DIRTY=0
 

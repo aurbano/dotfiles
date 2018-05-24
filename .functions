@@ -1,20 +1,4 @@
 # Create a new directory and enter it
-function md() {
-	mkdir -p "$@" && cd "$@"
-}
-
-
-# find shorthand
-function f() {
-    find . -name "$1" 2>&1 | grep -v 'Permission denied'
-}
-
-
-# cd into whatever is the forefront Finder window.
-cdf() {  # short for cdfinder
-  cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
-}
-
 
 # Start an HTTP server from a directory, optionally specifying the port
 function serve() {
@@ -25,21 +9,6 @@ function serve() {
 	python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
 
-
-# Copy w/ progress
-cp_p () {
-  rsync -WavP --human-readable --progress $1 $2
-}
-
-
-
-# get gzipped size
-function gz() {
-	echo "orig size    (bytes): "
-	cat "$1" | wc -c
-	echo "gzipped size (bytes): "
-	gzip -c "$1" | wc -c
-}
 
 # whois a domain or a URL
 function whois() {
@@ -54,7 +23,6 @@ function whois() {
 													# strip extra fluff
 	/usr/bin/whois -h whois.internic.net $domain | sed '/NOTICE:/q'
 }
-
 
 
 # Extract archives - use: extract <file>
@@ -118,26 +86,10 @@ gifify() {
   fi
 }
 
-# turn that video into webm.
-# brew reinstall ffmpeg --with-libvpx
-webmify(){
-	ffmpeg -i $1 -vcodec libvpx -acodec libvorbis -isync -copyts -aq 80 -threads 3 -qmax 30 -y $2 $1.webm
+# Automatically list directory contents on `cd`.
+auto-ls () {
+	emulate -L zsh;
+	# explicit sexy ls'ing as aliases arent honored in here.
+	hash gls >/dev/null 2>&1 && CLICOLOR_FORCE=1 gls -aFh --color --group-directories-first || ls
 }
-
-
-# visual studio code. a la `subl`
-code () {
-    if [[ $# = 0 ]]
-    then
-        open -a "Visual Studio Code"
-    else
-        [[ $1 = /* ]] && F="$1" || F="$PWD/${1#./}"
-        open -a "Visual Studio Code" --args "$F"
-    fi
-}
-
-# `shellswitch bash`
-# `shellswitch zsh`
-shellswitch () {
-	chsh -s $(brew --prefix)/bin/$1
-}
+chpwd_functions=( auto-ls $chpwd_functions )

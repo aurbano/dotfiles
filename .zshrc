@@ -1,102 +1,114 @@
-# uncomment to profile prompt startup with zprof
-# zmodload zsh/zprof
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# history
-SAVEHIST=100000
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/alex/dotfiles/oh-my-zsh
 
-# vim bindings
-bindkey -v
+# Pure prompt
+autoload -U promptinit; promptinit
 
-fpath=( "$HOME/.zfunctions" $fpath )
+# Set name of the theme to load. Optionally, if you set this to "random"
+# it'll load a random theme each time that oh-my-zsh is loaded.
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+ZSH_THEME="" # Empty for pure prompt
 
-export PATH="/usr/local/sbin:$PATH"
+# Set list of themes to load
+# Setting this variable when ZSH_THEME=random
+# cause zsh load theme from this variable instead of
+# looking in ~/.oh-my-zsh/themes/
+# An empty array have no effect
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-# antigen time!
-source ~/code/antigen/antigen.zsh
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-######################################################################
-### install some antigen bundles
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
 
-local b="antigen-bundle"
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
 
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-# Don't load the oh-my-zsh's library. Takes too long. No need.
-	# antigen use oh-my-zsh
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-# Guess what to install when running an unknown command.
-$b command-not-found
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-# Helper for extracting different types of archives.
-$b extract
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
 
-# homebrew  - autocomplete on `brew install`
-$b brew
-$b brew-cask
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Tracks your most used directories, based on 'frecency'.
-$b robbyrussell/oh-my-zsh plugins/z
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
 
-# suggestion as you type
-$b tarruda/zsh-autosuggestions
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-# nicoulaj's moar completion files for zsh
-# $b zsh-users/zsh-completions src
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+  aws
+  colored-man-pages
+  colorize
+  command-not-found
+  common-aliases
+  docker
+  git
+  gradle
+  gulp
+  heroku
+  zsh-history-substring-search
+  iterm2
+  osx
+  ssh-agent
+  sudo
+  yarn
+)
 
-# Syntax highlighting on the readline
-$b zsh-users/zsh-syntax-highlighting
+source $ZSH/oh-my-zsh.sh
 
-# colors for all files!
-$b trapd00r/zsh-syntax-highlighting-filetypes
+# User configuration
 
-# dont set a theme, because pure does it all
-$b mafredri/zsh-async
-$b sindresorhus/pure
+# export MANPATH="/usr/local/man:$MANPATH"
 
-# history search
-$b zsh-users/zsh-history-substring-search
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
-# Tell antigen that you're done.
-antigen apply
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
 
-###
-#################################################################################################
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
+# ssh
+# export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-
-# bind UP and DOWN arrow keys for history search
-source ~/dotfiles/bindkeys.zsh
-
-export PURE_GIT_UNTRACKED_DIRTY=0
-
-# Automatically list directory contents on `cd`.
-auto-ls () {
-	emulate -L zsh;
-	# explicit sexy ls'ing as aliases arent honored in here.
-	hash gls >/dev/null 2>&1 && CLICOLOR_FORCE=1 gls -aFh --color --group-directories-first || ls
-}
-chpwd_functions=( auto-ls $chpwd_functions )
-
-# history mgmt
-# http://www.refining-linux.org/archives/49/ZSH-Gem-15-Shared-history/
-setopt inc_append_history
-setopt share_history
-
-
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-
-
-# uncomment to finish profiling
-# zprof
-
-eval "$(rbenv init -)"
-
-
-# Load default dotfiles
-source ~/.bash_profile
-
-export PATH="$HOME/.yarn/bin:$PATH"
-export PATH="$HOME/Library/Python/2.7/bin:$PATH"
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+source ~/dotfiles/.functions
+source ~/dotfiles/.aliases
 
 # added by travis gem
 [ -f /Users/alex/.travis/travis.sh ] && source /Users/alex/.travis/travis.sh
@@ -104,9 +116,5 @@ export PATH="$HOME/Library/Python/2.7/bin:$PATH"
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/alex/.config/yarn/global/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/alex/.config/yarn/global/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/alex/.config/yarn/global/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/alex/.config/yarn/global/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+# Add pure as the prompt at the end, so it can override oh my zsh
+prompt pure

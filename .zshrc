@@ -78,6 +78,7 @@ plugins=(
   ssh-agent
   sudo
   yarn
+  z
 )
 
 source $ZSH/oh-my-zsh.sh

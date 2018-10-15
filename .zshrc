@@ -2,7 +2,7 @@
 export ZSH=~/dotfiles/oh-my-zsh
 
 # Pure prompt
-autoload -U promptinit; promptinit
+#autoload -U promptinit; promptinit
 
 # Improve autocompletion
 fpath=(~/.zsh/completions $fpath)
@@ -10,7 +10,7 @@ autoload -U compinit && compinit
 
 # Set name of the theme to load
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="" # Empty for pure prompt
+ZSH_THEME="avit" # Empty for pure prompt
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -47,6 +47,7 @@ plugins=(
   common-aliases
   docker
   git
+  golang
   gradle
   gulp
   heroku
@@ -91,5 +92,8 @@ source ~/dotfiles/.aliases
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+# Setup golang
+export GOPATH=~/proyects/golang
+
 # Add pure as the prompt at the end, so it can override oh my zsh
-prompt pure
+#prompt pure

@@ -4,9 +4,9 @@ export ZSH=~/dotfiles/oh-my-zsh
 # Pure prompt
 autoload -U promptinit; promptinit
 
-# Improve autocompletion
+# Improve autocompletion, changing the cache path
 fpath=(~/.zsh/completions $fpath)
-autoload -U compinit && compinit
+autoload -U compinit && compinit -d ~/.cache/zsh/.zcompdump-$ZSH_VERSION 
 
 # Set name of the theme to load
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -34,6 +34,10 @@ COMPLETION_WAITING_DOTS="true"
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 HIST_STAMPS="dd.mm.yyyy"
+export HISTFILE="~/.cache/.zsh_history"
+
+# Change z storage dir
+export _Z_DATA="$HOME/.cache/zsh/.z"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/

@@ -51,13 +51,14 @@ plugins=(
   gradle
   gulp
   heroku
-  zsh-history-substring-search
   iterm2
+  npm
   osx
   ssh-agent
   sudo
   yarn
   z
+  zsh-history-substring-search
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting # keep this one last!
@@ -94,6 +95,13 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # Setup golang
 export GOPATH=~/proyects/golang
+
+# Android Emulator
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Add pure as the prompt at the end, so it can override oh my zsh
 prompt pure

@@ -156,7 +156,7 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 139 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>261 223 796 486 0 0 1440 877 </string>
+	<string>261 195 796 486 0 0 1440 877 </string>
 	<key>NSWindow Frame com.apple.typography_panel_RobotoMono-Regular</key>
 	<string>398 587 260 87 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
@@ -884,7 +884,7 @@
 			<key>Use Non-ASCII Font</key>
 			<true/>
 			<key>Vertical Spacing</key>
-			<real>1.0493128765060242</real>
+			<real>1.0616469785391567</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>

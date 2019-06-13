@@ -109,3 +109,5 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Add pure as the prompt at the end, so it can override oh my zsh
 prompt pure
+
+export PATH=/Users/alex/.local/bin:$PATH

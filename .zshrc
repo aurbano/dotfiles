@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=~/dotfiles/oh-my-zsh
+export ZSH=~/dotfiles/.oh-my-zsh
 
 # Pure prompt
 autoload -U promptinit; promptinit

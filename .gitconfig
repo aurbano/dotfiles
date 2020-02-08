@@ -40,7 +40,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
-	pager = diff-so-fancy | less --tabs=1,5 -R
+	pager = ~/bin/diff-so-fancy | less --tabs=1,5 -R
 [color "branch"]
 	current = yellow reverse
 	local = yellow

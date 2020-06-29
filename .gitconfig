@@ -86,9 +86,9 @@
   # For username / github token / etc
   path = ~/.gitconfig.local
 [user]
-	name = Alejandro Alvarez
-	email = alejandro.alvarez@transferwise.com
-    signingkey = CFDDF4DF 
+	name = Alejandro U. Alvarez
+	email = aluralma@gmail.com
+    signingkey = 7C7045D3361CFA66
 [credential]
 	helper = osxkeychain
 [branch "master"]

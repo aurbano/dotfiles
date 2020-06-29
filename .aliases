@@ -38,3 +38,7 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done
+
+# Stop autocorrecting npm & yarn
+alias npm='nocorrect npm' 
+alias yarn='nocorrect yarn' 

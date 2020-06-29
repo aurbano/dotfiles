@@ -65,6 +65,7 @@ plugins=(
   zsh-history-substring-search
   zsh-completions
   zsh-autosuggestions
+  zsh-better-npm-completion
   zsh-syntax-highlighting # keep this one last!
 )
 
@@ -111,3 +112,11 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 prompt pure
 
 export PATH=/Users/alex/.local/bin:$PATH
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/Alejandro.Alvarez/.sdkman"
+[[ -s "/Users/Alejandro.Alvarez/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/Alejandro.Alvarez/.sdkman/bin/sdkman-init.sh"

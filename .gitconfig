@@ -90,7 +90,7 @@
 	email = aluralma@gmail.com
     signingkey = 7C7045D3361CFA66
 [credential]
-	helper = osxkeychain
+	helper = store
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
@@ -98,3 +98,5 @@
     #gpgsign = true
 [gpg]
 	program = gpg
+[pull]
+	default = upstream

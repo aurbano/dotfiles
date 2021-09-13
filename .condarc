@@ -1,0 +1,3 @@
+channels: [conda-forge]
+auto_update_conda: true
+auto_activate_base: false

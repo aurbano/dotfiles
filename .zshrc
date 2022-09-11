@@ -58,7 +58,7 @@ plugins=(
   heroku
   iterm2
   npm
-  osx
+  macos
   ssh-agent
   sudo
   yarn

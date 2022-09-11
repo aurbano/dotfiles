@@ -100,3 +100,6 @@
 	program = gpg
 [pull]
 	default = upstream
+	rebase = true
+[diff]
+	colorMoved = zebra

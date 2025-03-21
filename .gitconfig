@@ -33,6 +33,18 @@
 			git commit --amend -m \"$(git log -1 --pretty=%B)\n\nCloses #$1.\"; \
 		fi \
 	}; f"
+	append = town append
+	diff-parent = town diff-parent
+	hack = town hack
+	kill = town kill
+	new-pull-request = town new-pull-request
+	prepend = town prepend
+	prune-branches = town prune-branches
+	rename-branch = town rename-branch
+	repo = town repo
+	ship = town ship
+	sync = town sync
+	branch-prune = "!git fetch -p && for b in $(git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads); do git branch -d $b; done"
 
 [color]
 	ui = auto
@@ -41,6 +53,8 @@
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
 	pager = ~/bin/diff-so-fancy | less --tabs=1,5 -R
+	autocrlf = input
+	editor = vim
 [color "branch"]
 	current = yellow reverse
 	local = yellow
@@ -81,6 +95,7 @@
 # push easily. http://stackoverflow.com/a/23918418/89484
 [push]
 	default = current
+	autoSetupRemote = true
 
 [include]
   # For username / github token / etc
@@ -88,18 +103,23 @@
 [user]
 	name = Alejandro U. Alvarez
 	email = aluralma@gmail.com
-    signingkey = 7C7045D3361CFA66
+	signingkey = 3390D21E9092E8B177E5ED45FFF2A1E32086A3D8
 [credential]
 	helper = store
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
 [commit]
+	gpgsign = true
     #gpgsign = true
 [gpg]
-	program = gpg
+	program = /opt/homebrew/bin/gpg
 [pull]
 	default = upstream
 	rebase = true
 [diff]
 	colorMoved = zebra
+    default = upstream
+	rebase = false
+[init]
+	defaultBranch = main

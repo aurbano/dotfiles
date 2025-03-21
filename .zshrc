@@ -1,7 +1,12 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/dotfiles/.oh-my-zsh
 
+# Brew
+export PATH=/opt/homebrew/bin:$PATH
+
 # Pure prompt
+# Temp fix for M1, should be able to remove later
+fpath+=/opt/homebrew/share/zsh/site-functions
 autoload -U promptinit; promptinit
 
 # Improve autocompletion, changing the cache path
@@ -30,14 +35,12 @@ COMPLETION_WAITING_DOTS="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-HIST_STAMPS="dd.mm.yyyy"
-export HISTFILE="~/.cache/.zsh_history"
-
 # Change z storage dir
 export _Z_DATA="$HOME/.cache/zsh/.z"
+
+# Additional plugins
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -50,27 +53,25 @@ plugins=(
   colorize
   command-not-found
   common-aliases
-  docker
+  dotenv
   git
-  golang
-  gradle
-  gulp
-  heroku
+  git-escape-magic
+  gitfast
   iterm2
   npm
+  nvm
   macos
   ssh-agent
   sudo
   yarn
   z
-  zsh-history-substring-search
-  zsh-completions
-  zsh-autosuggestions
-  zsh-better-npm-completion
-  zsh-syntax-highlighting # keep this one last!
+ # zsh-completions
+ # zsh-autosuggestions
+ # zsh-better-npm-completion
 )
 
 source $ZSH/oh-my-zsh.sh
+source $ZSH/lib/history.zsh
 
 # User configuration
 
@@ -93,22 +94,6 @@ source $ZSH/oh-my-zsh.sh
 source ~/dotfiles/.functions
 source ~/dotfiles/.aliases
 
-# added by travis gem
-[ -f /Users/alex/.travis/travis.sh ] && source /Users/alex/.travis/travis.sh
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
-# Setup golang
-export GOPATH=~/proyects/golang
-
-# Android Emulator
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
@@ -116,9 +101,35 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH=/Users/alex/.local/bin:$PATH
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="${HOME}/.sdkman"
+[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+export PATH="/usr/local/sbin:$PATH"
+
+# Add pure as the prompt at the end, so it can override oh my zsh
+prompt pure
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+. "$HOME/.cargo/env"
+
+# pnpm
+export PNPM_HOME="/Users/alex/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+export PATH="/opt/homebrew/opt/bzip2/bin:$PATH"
+# zlib/bzip2 for python 3.6.7
+export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include"
 
 # Python
 eval "$(pyenv init -)"
@@ -141,10 +152,3 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/Alejandro.Alvarez/.sdkman"
-[[ -s "/Users/Alejandro.Alvarez/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/Alejandro.Alvarez/.sdkman/bin/sdkman-init.sh"
-export PATH="/usr/local/sbin:$PATH"
-
-# Add pure as the prompt at the end, so it can override oh my zsh
-prompt pure

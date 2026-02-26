@@ -1,18 +1,19 @@
 alias p="ps -m -o pid,user,%mem,args"
-alias ipinfo="curl ipinfo.io/$1"
-alias st="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl $1"
+
+# Sublime Text (only if installed)
+if [[ -d "/Applications/Sublime Text.app" ]]; then
+  alias st="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+fi
 
 alias hosts='sudo $EDITOR /etc/hosts'   # yes I occasionally 127.0.0.1 twitter.com ;)
 
 # GIT STUFF
 
-# Undo a `git push`
-alias undopush="git push -f origin HEAD^:master"
-alias gclean='git branch --merged | grep -v "\*" | grep -v "master" | grep -v "develop" | grep -v "staging" | xargs -n 1 git branch -d'
+alias gclean='git branch --merged | grep -v "\*" | grep -v "master" | grep -v "main" | grep -v "develop" | grep -v "staging" | xargs -n 1 git branch -d'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en1"
+alias localip="ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
 # All the dig info
@@ -34,11 +35,29 @@ alias fs="stat -f \"%z bytes\""
 # Empty the Trash on all mounted volumes and the main HDD
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
 
-# One of @janmoesen’s ProTip™s
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	alias "$method"="lwp-request -m '$method'"
-done
+# HTTP verbs (curl-based)
+alias GET='curl -sS'
+alias HEAD='curl -sS -I'
+alias POST='curl -sS -X POST'
+alias PUT='curl -sS -X PUT'
+alias DELETE='curl -sS -X DELETE'
 
 # Stop autocorrecting npm & yarn
-alias npm='nocorrect npm' 
-alias yarn='nocorrect yarn' 
+alias npm='nocorrect npm'
+alias yarn='nocorrect yarn'
+
+# Modern tool aliases (guarded)
+if command -v bat &>/dev/null; then
+  alias cat='bat --paging=never'
+fi
+
+if command -v eza &>/dev/null; then
+  alias ls='eza --group-directories-first'
+  alias ll='eza -l --group-directories-first'
+  alias la='eza -la --group-directories-first'
+  alias lt='eza --tree --level=2'
+fi
+
+if command -v fd &>/dev/null; then
+  alias find='fd'
+fi

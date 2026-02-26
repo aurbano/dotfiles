@@ -1,154 +1,170 @@
-# Path to your oh-my-zsh installation.
+# Deduplicate PATH entries
+typeset -U PATH
+
+# ─── Cached brew prefix ─────────────────────────────────────────────────────
+# Avoids a subprocess call on every shell start (~40ms saved)
+# Regenerate: rm ~/.cache/zsh/brew_prefix
+_brew_prefix_cache="$HOME/.cache/zsh/brew_prefix"
+if [[ -f "$_brew_prefix_cache" ]]; then
+  BREW_PREFIX="$(<$_brew_prefix_cache)"
+else
+  BREW_PREFIX="$(brew --prefix)"
+  mkdir -p "${_brew_prefix_cache:h}"
+  echo "$BREW_PREFIX" > "$_brew_prefix_cache"
+fi
+export PATH=$BREW_PREFIX/bin:$PATH
+
+# ─── Oh My Zsh ──────────────────────────────────────────────────────────────
 export ZSH=~/dotfiles/.oh-my-zsh
 
-# Brew
-export PATH=/opt/homebrew/bin:$PATH
-
 # Pure prompt
-# Temp fix for M1, should be able to remove later
-fpath+=/opt/homebrew/share/zsh/site-functions
+fpath+=$BREW_PREFIX/share/zsh/site-functions
 autoload -U promptinit; promptinit
 
-# Improve autocompletion, changing the cache path
-fpath=(~/.zsh/completions $fpath)
-autoload -U compinit && compinit -d ~/.cache/zsh/.zcompdump-$ZSH_VERSION 
+# Completions fpath (before compinit)
+fpath=(~/.zsh/completions $HOME/.docker/completions ~/.zfunc $fpath)
 
-# Set name of the theme to load
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="" # Empty for pure prompt
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Change z storage dir
 export _Z_DATA="$HOME/.cache/zsh/.z"
 
-# Additional plugins
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+# Source syntax-highlighting & substring-search from brew (faster than OMZ clones)
+source $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(
   autoupdate
   aws
   colored-man-pages
   colorize
-  command-not-found
   common-aliases
   dotenv
   git
   git-escape-magic
   gitfast
   iterm2
-  npm
-  nvm
   macos
   ssh-agent
   sudo
   yarn
   z
- # zsh-completions
- # zsh-autosuggestions
- # zsh-better-npm-completion
 )
 
+# Defer compinit — OMZ calls it without -C (212ms). We stub it out here
+# and call it once ourselves after all plugins/fpath are configured.
+skip_global_compinit=1
+DISABLE_COMPFIX=true
+
+# Stub compinit + compdef so OMZ's call is a no-op. Buffer compdef calls.
+typeset -ga _compdef_buffer=()
+compinit() { : }
+compdef() { _compdef_buffer+=("${(j: :)@}") }
 source $ZSH/oh-my-zsh.sh
-source $ZSH/lib/history.zsh
+unfunction compinit compdef 2>/dev/null
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
+# ─── User config ────────────────────────────────────────────────────────────
 source ~/dotfiles/.functions
 source ~/dotfiles/.aliases
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
-[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
-
-export PATH=/Users/alex/.local/bin:$PATH
-
-# Pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="${HOME}/.sdkman"
-[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-export PATH="/usr/local/sbin:$PATH"
-
-# Add pure as the prompt at the end, so it can override oh my zsh
-prompt pure
+# ─── Single compinit with daily cache ────────────────────────────────────────
+# One compinit call for the entire session. Uses -C (cached) if dump is <24h old.
+autoload -Uz compinit
+_comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-24))
+if (( ${#_comp_files} )); then
+  compinit -C
+else
+  compinit
+fi
+unset _comp_files
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
-. "$HOME/.cargo/env"
+zstyle ':completion:*' menu select
 
-# pnpm
-export PNPM_HOME="/Users/alex/Library/pnpm"
+# Replay compdef calls that were buffered during OMZ plugin loading
+# (git alias completions may warn about unknown services — harmless, silenced)
+for _def in "${_compdef_buffer[@]}"; do compdef $_def 2>/dev/null; done
+unset _compdef_buffer _def
+
+# ─── NVM (lazy-loaded) ──────────────────────────────────────────────────────
+export NVM_DIR="$HOME/.nvm"
+# Add default node to PATH eagerly so non-interactive shells (git hooks) find npm
+if [[ -d "$NVM_DIR/versions/node" ]]; then
+  _nvm_default_path="$NVM_DIR/versions/node/$(ls "$NVM_DIR/versions/node" | sort -V | tail -1)/bin"
+  [[ -d "$_nvm_default_path" ]] && export PATH="$_nvm_default_path:$PATH"
+  unset _nvm_default_path
+fi
+__nvm_lazy_load() {
+  unalias npm 2>/dev/null
+  unset -f nvm node npm npx
+  [ -s "$BREW_PREFIX/opt/nvm/nvm.sh" ] && . "$BREW_PREFIX/opt/nvm/nvm.sh"
+  [ -s "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+}
+nvm() { __nvm_lazy_load; nvm "$@"; }
+node() { __nvm_lazy_load; node "$@"; }
+unalias npm 2>/dev/null
+npm() { __nvm_lazy_load; npm "$@"; }
+npx() { __nvm_lazy_load; npx "$@"; }
+
+# ─── Pyenv (lazy-loaded) ────────────────────────────────────────────────────
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+pyenv() {
+  unset -f pyenv
+  eval "$(command pyenv init -)"
+  pyenv "$@"
+}
+
+# ─── PATH additions ─────────────────────────────────────────────────────────
+export PATH=$HOME/.local/bin:$PATH
+
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
-export PATH="/opt/homebrew/opt/bzip2/bin:$PATH"
-# zlib/bzip2 for python 3.6.7
-export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include"
 
-# Python
-eval "$(pyenv init -)"
+export DEPOT_INSTALL_DIR="$HOME/.depot/bin"
+export PATH="$DEPOT_INSTALL_DIR:$PATH"
+
+# Python virtualenvs
 export WORKON_HOME=~/.virtualenvs
-mkdir -p $WORKON_HOME
-#. ~/.pyenv/versions/3.9.1/bin/virtualenvwrapper.sh
+[[ -d $WORKON_HOME ]] || mkdir -p $WORKON_HOME
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
-    fi
+export GPG_TTY=$(tty)
+
+# Google Cloud SDK
+if [ -f "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc" ]; then . "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"; fi
+if [ -f "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc" ]; then . "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"; fi
+
+# ─── Prompt ──────────────────────────────────────────────────────────────────
+prompt pure
+
+# ─── twig completion (cached) ────────────────────────────────────────────────
+_zsh_cache="$HOME/.cache/zsh"
+if [[ ! -f "$_zsh_cache/twig.zsh" ]] && command -v twig &>/dev/null; then
+  twig --completion > "$_zsh_cache/twig.zsh" 2>/dev/null
 fi
-unset __conda_setup
-# <<< conda initialize <<<
+[[ -f "$_zsh_cache/twig.zsh" ]] && source "$_zsh_cache/twig.zsh"
 
+# ─── fzf & zoxide (cached init) ─────────────────────────────────────────────
+# Cache the output of `fzf --zsh` and `zoxide init zsh` to files.
+# Regenerate: rm ~/.cache/zsh/{fzf,zoxide,twig}.zsh
+if [[ ! -f "$_zsh_cache/fzf.zsh" ]] && command -v fzf &>/dev/null; then
+  fzf --zsh > "$_zsh_cache/fzf.zsh" 2>/dev/null
+fi
+[[ -f "$_zsh_cache/fzf.zsh" ]] && source "$_zsh_cache/fzf.zsh"
+
+if [[ ! -f "$_zsh_cache/zoxide.zsh" ]] && command -v zoxide &>/dev/null; then
+  zoxide init zsh > "$_zsh_cache/zoxide.zsh" 2>/dev/null
+fi
+[[ -f "$_zsh_cache/zoxide.zsh" ]] && source "$_zsh_cache/zoxide.zsh"
+
+unset _zsh_cache
+
+# ─── Machine-specific config (last) ─────────────────────────────────────────
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

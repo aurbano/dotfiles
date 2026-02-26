@@ -15,35 +15,24 @@
     # Not quite as common as an amend, but still common
     # https://git-scm.com/docs/git-reset#git-reset-emgitresetemltmodegtltcommitgt
 
-    stash-all = stash save --include-untracked
+    stash-all = stash push --include-untracked
     # We wanna grab those pesky un-added files!
     # https://git-scm.com/docs/git-stash
 
 	# Show the diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
-	# Merge GitHub pull request on top of the `master` branch
+	# Merge GitHub pull request on top of the current branch
 	mpr = "!f() { \
 		if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
 			git fetch origin refs/pull/$1/head:pr/$1 && \
-			git rebase master pr/$1 && \
-			git checkout master && \
+			git rebase main pr/$1 && \
+			git checkout main && \
 			git merge pr/$1 && \
 			git branch -D pr/$1 && \
 			git commit --amend -m \"$(git log -1 --pretty=%B)\n\nCloses #$1.\"; \
 		fi \
 	}; f"
-	append = town append
-	diff-parent = town diff-parent
-	hack = town hack
-	kill = town kill
-	new-pull-request = town new-pull-request
-	prepend = town prepend
-	prune-branches = town prune-branches
-	rename-branch = town rename-branch
-	repo = town repo
-	ship = town ship
-	sync = town sync
 	branch-prune = "!git fetch -p && for b in $(git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads); do git branch -d $b; done"
 
 [color]
@@ -52,7 +41,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
-	pager = ~/bin/diff-so-fancy | less --tabs=1,5 -R
+	pager = delta
 	autocrlf = input
 	editor = vim
 [color "branch"]
@@ -70,6 +59,11 @@
 	untracked = cyan
 [merge]
     tool = opendiff
+    conflictstyle = diff3
+
+[delta]
+	navigate = true
+	line-numbers = true
 
 # rewrites
 [url "git@github.com:"]
@@ -100,26 +94,22 @@
 [include]
   # For username / github token / etc
   path = ~/.gitconfig.local
-[user]
-	name = Alejandro U. Alvarez
-	email = aluralma@gmail.com
-	signingkey = 3390D21E9092E8B177E5ED45FFF2A1E32086A3D8
 [credential]
-	helper = store
+	helper = osxkeychain
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
 [commit]
 	gpgsign = true
-    #gpgsign = true
 [gpg]
-	program = /opt/homebrew/bin/gpg
+	format = ssh
 [pull]
-	default = upstream
 	rebase = true
 [diff]
 	colorMoved = zebra
-    default = upstream
-	rebase = false
 [init]
 	defaultBranch = main
+[rebase]
+	autoStash = true
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign

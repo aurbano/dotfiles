@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(zsh:*)",
+      "Bash(chmod +x:*)",
+      "Bash(/bin/rm:*)",
+      "Bash(bash:*)",
+      "Bash(ZDOTDIR=/tmp/zsh-empty zsh:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

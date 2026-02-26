@@ -2,10 +2,32 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AIFeatureFunctionCalling</key>
+	<true/>
+	<key>AIFeatureHostedCodeInterpeter</key>
+	<true/>
+	<key>AIFeatureHostedFileSearch</key>
+	<true/>
+	<key>AIFeatureHostedWebSearch</key>
+	<true/>
+	<key>AIFeatureStreamingResponses</key>
+	<true/>
+	<key>AITermAPI</key>
+	<integer>2</integer>
+	<key>AIVectorStore</key>
+	<integer>0</integer>
 	<key>AdjustWindowForFontSizeChange</key>
 	<false/>
+	<key>AiMaxTokens</key>
+	<integer>400000</integer>
+	<key>AiModel</key>
+	<string>gpt-5.1</string>
+	<key>AiResponseMaxTokens</key>
+	<integer>128000</integer>
+	<key>AitermURL</key>
+	<string>https://api.openai.com/v1/responses</string>
 	<key>AllowClipboardAccess</key>
-	<false/>
+	<true/>
 	<key>AnimateDimming</key>
 	<false/>
 	<key>AutoHideTmuxClientSession</key>
@@ -46,6 +68,22 @@
 	<false/>
 	<key>FsTabDelay</key>
 	<real>1</real>
+	<key>GlobalKeyMap</key>
+	<dict>
+		<key>0xd-0x20000-0x24</key>
+		<dict>
+			<key>Action</key>
+			<integer>12</integer>
+			<key>Keycode</key>
+			<integer>13</integer>
+			<key>Modifiers</key>
+			<integer>131072</integer>
+			<key>Text</key>
+			<string>\n</string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HiddenAFRStrokeThickness</key>
@@ -356,7 +394,7 @@
 			<key>Minimum Contrast</key>
 			<real>0.11864583939313889</real>
 			<key>Mouse Reporting</key>
-			<true/>
+			<false/>
 			<key>Name</key>
 			<string>alex</string>
 			<key>Non Ascii Font</key>
@@ -516,7 +554,7 @@
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
 			<key>Transparency</key>
-			<real>0.10230677574872971</real>
+			<real>0.02</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
@@ -1051,7 +1089,7 @@
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<false/>
+	<true/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>
@@ -1107,6 +1145,10 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>findRegex_iTerm</key>
+	<false/>
+	<key>kCPKSelectionViewPreferredModeKey</key>
+	<integer>0</integer>
+	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
 	<false/>
 </dict>
 </plist>

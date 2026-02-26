@@ -1,0 +1,57 @@
+# Machine-specific configuration — copy to ~/.zshrc.local and customize
+# This file is sourced at the end of .zshrc
+
+# ─── Company-specific aliases ────────────────────────────────────────────────
+# alias tim='uvx --from git+ssh://git@github.com/runwayml/timataka timataka'
+# alias timd='AWS_PROFILE=infra tim download --bucket runway-timora-instrumentation-stage --prefix gyros -o merged.json'
+# alias tui='cd ~/assistant/tui && uv run todo_tui.py'
+
+# ─── AWS ─────────────────────────────────────────────────────────────────────
+# export RW_USER=aalvarez
+# export AWS_PROFILE=api
+
+# awslogin() {
+#   local profile="$1"
+#   if [ -z "$profile" ]; then
+#     echo "Usage: awslogin <profile-name>"
+#     return 1
+#   fi
+#   if ! aws sts get-caller-identity --profile="$profile" &>/dev/null; then
+#     echo "Credentials expired or invalid, logging in..."
+#     aws sso login --sso-session runway
+#   fi
+#   export AWS_PROFILE="$profile"
+#   echo "AWS_PROFILE=$profile"
+# }
+
+# ─── Git identity ────────────────────────────────────────────────────────────
+# Set your name/email/signingkey in ~/.gitconfig.local:
+#   [user]
+#     name = Your Name
+#     email = you@company.com
+#     signingkey = ssh-ed25519 AAAA...
+
+# ─── Python compilation flags (if building CPython from source) ──────────────
+# export LDFLAGS="-L$(brew --prefix)/opt/bzip2/lib"
+# export CPPFLAGS="-I$(brew --prefix)/opt/bzip2/include"
+# export PATH="$(brew --prefix)/opt/bzip2/bin:$PATH"
+
+# ─── SDKMAN (Java) ──────────────────────────────────────────────────────────
+# export SDKMAN_DIR="${HOME}/.sdkman"
+# [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+# ─── Conda / Miniforge ──────────────────────────────────────────────────────
+# __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+#         . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+
+# ─── Custom PATH additions ──────────────────────────────────────────────────
+# export PATH="$HOME/custom/bin:$PATH"

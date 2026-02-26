@@ -33,7 +33,6 @@ set cindent " Indent for C files
 set diffopt=filler " Add vertical spaces to keep right and left aligned
 set diffopt+=iwhite " Ignore whitespace changes (focus on code changes)
 set encoding=utf-8 nobomb " BOM often causes trouble
-set esckeys " Allow cursor keys in insert mode
 set expandtab " Expand tabs to spaces
 set foldcolumn=0 " Column to show folds
 set nofoldenable " Enable folding
@@ -76,7 +75,7 @@ set report=0 " Show all changes
 set ruler " Show the cursor position
 set scrolloff=3 " Start scrolling three lines before horizontal border of window
 set shell=/bin/sh " Use /bin/sh for executing shell commands
-set shellcmdflag:-ic " Use interactive shell (loads aliases)
+set shellcmdflag=-ic " Use interactive shell (loads aliases)
 set shiftwidth=2 " The # of spaces for indenting
 set shortmess=atI " Don't show the intro message when starting vim
 set showtabline=2 " Always show tab bar
@@ -90,8 +89,6 @@ set splitright " New windows goes right
 set suffixes=.bak,~,.swp,.swo,.o,.d,.info,.aux,.log,.dvi,.pdf,.bin,.bbl,.blg,.brf,.cb,.dmg,.exe,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.pyd,.dll
 set switchbuf=""
 set title " Show the filename in the window titlebar
-set ttyfast " Send more characters at a given time
-set ttymouse=xterm " Set mouse type to xterm
 set undofile " Persistent Undo
 set viminfo=%,'9999,s512,n~/.vim/viminfo " Restore buffer list, marks are remembered for 9999 files, registers up to 512Kb are remembered
 set visualbell " Use visual bell instead of audible bell (annnnnoying)
@@ -254,7 +251,6 @@ augroup nerd_commenter
 
   let NERDSpaceDelims=1
   let NERDCompactSexyComs=1
-  let g:NERDCustomDelimiters = { 'racket': { 'left': ';', 'leftAlt': '#|', 'rightAlt': '|#' } }
 augroup END
 " }}}
 
@@ -431,42 +427,6 @@ augroup filetype_c
 augroup END
 " }}}
 
-" Clojure {{{
-augroup filetype_clojure
-  autocmd!
-  let g:vimclojure#ParenRainbow = 1 " Enable rainbow parens
-  let g:vimclojure#DynamicHighlighting = 1 " Dynamic highlighting
-  let g:vimclojure#FuzzyIndent = 1 " Names beginning in 'def' or 'with' to be indented as if they were included in the 'lispwords' option
-augroup END
-" }}}
-
-" Coffee {{{
-augroup filetype_coffee
-  autocmd!
-  au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-augroup END
-" }}}
-
-"Fish {{{
-augroup filetype_fish
-  autocmd!
-  au BufRead,BufNewFile *.fish set ft=fish
-augroup END
-" }}}
-
-" Handlebars {{{
-augroup filetype_hbs
-  autocmd!
-  au BufRead,BufNewFile *.hbs,*.handlebars,*.hbs.erb,*.handlebars.erb setl ft=mustache syntax=mustache
-augroup END
-" }}}
-
-" Jade {{{
-augroup filetype_jade
-  autocmd!
-  au BufRead,BufNewFile *.jade set ft=jade syntax=jade
-augroup END
-" }}}
 
 " JavaScript {{{
 augroup filetype_javascript
@@ -489,28 +449,6 @@ augroup filetype_markdown
 augroup END
 " }}}
 
-" Nu {{{
-augroup filetype_nu
-  autocmd!
-  au BufNewFile,BufRead *.nu,*.nujson,Nukefile setf nu
-augroup END
-" }}}
-
-" Ruby {{{
-augroup filetype_ruby
-  autocmd!
-
-  au BufRead,BufNewFile Rakefile,Capfile,Gemfile,.autotest,.irbrc,*.treetop,*.tt set ft=ruby syntax=ruby
-
-  " Ruby.vim {{{
-  let ruby_operators = 1
-  let ruby_space_errors = 1
-  let ruby_fold = 1
-  " }}}
-augroup END
-" }}}
-
-" }}}
 " XML {{{
 augroup filetype_xml
   autocmd!
@@ -625,45 +563,27 @@ call plug#begin('~/.vim/plugged')
 Plug 'ap/vim-css-color'
 Plug 'bling/vim-airline'
 Plug 'FelikZ/ctrlp-py-matcher'
-Plug 'guns/vim-clojure-static'
-Plug 'joker1007/vim-ruby-heredoc-syntax'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-emoji'
 Plug 'junegunn/goyo.vim'
-Plug 'kchmck/vim-coffee-script'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'msanders/snipmate.vim'
-Plug 'mustache/vim-mustache-handlebars'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'oplatek/Conque-Shell'
 Plug 'pangloss/vim-javascript'
-Plug 'rking/ag.vim'
 Plug 'scrooloose/syntastic'
-Plug 'slim-template/vim-slim', { 'for': 'slim' }
-Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-markdown',     { 'for': 'markdown' }
-Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'vim-ruby/vim-ruby'
-Plug 'vim-scripts/fish.vim',   { 'for': 'fish' }
-Plug 'vim-scripts/jade.vim',   { 'for': 'jade' }
-Plug 'wavded/vim-stylus',      { 'for': 'stylus' }
-Plug 'wlangstroth/vim-racket'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
 
 call plug#end()
 " }}}
 
-" Run pathogen
-execute pathogen#infect()
-
 " indent guides
-set ts=4 sw=4 et
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 

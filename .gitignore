@@ -1,18 +1,12 @@
 
-# working files
-.vim/viminfo
-.vim/swaps/*
-.vim/undo
-.vim/plugged
-.vim/.netrwhist
-
-!.vim/swaps/README
-
 # git credential file
 .gitconfig.local
 
 # Claude Code — machine-local permissions
 .claude/settings.local.json
+
+# Oh My Zsh (cloned by setup.sh, not tracked)
+.oh-my-zsh
 
 
 # Folder view configuration files

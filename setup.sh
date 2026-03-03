@@ -194,6 +194,7 @@ declare -a SYMLINK_DIRS=(
 # Symlinks where the target is ~/.config/<name> instead of ~/<name>
 declare -a CONFIG_SYMLINK_DIRS=(
   nvim
+  ghostty
 )
 
 _apply_symlink() {

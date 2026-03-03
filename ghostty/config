@@ -1,0 +1,13 @@
+# Font
+font-family = Hack Nerd Font Mono
+font-size = 14
+
+# Theme (matches nvim catppuccin-mocha)
+theme = catppuccin-mocha
+
+# Background (kali dragon)
+background-image = ~/dotfiles/kali.jpg
+background-image-opacity = 0.15
+
+# Window
+window-decoration = false

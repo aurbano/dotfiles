@@ -58,4 +58,5 @@ brew "ffmpeg"
 cask "font-hack-nerd-font"         # nerd font for nvim/lualine icons
 
 # ─── Casks ───────────────────────────────────────────────────────────────────
+cask "ghostty"
 cask "suspicious-package"          # inspect .pkg installers

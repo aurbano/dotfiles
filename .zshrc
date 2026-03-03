@@ -32,8 +32,10 @@ COMPLETION_WAITING_DOTS="true"
 export _Z_DATA="$HOME/.cache/zsh/.z"
 
 # Source syntax-highlighting & substring-search from brew (faster than OMZ clones)
-source $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+[[ -f $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
+  source $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[[ -f $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && \
+  source $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 plugins=(
   autoupdate
@@ -56,7 +58,7 @@ plugins=(
 # Defer compinit — OMZ calls it without -C (212ms). We stub it out here
 # and call it once ourselves after all plugins/fpath are configured.
 skip_global_compinit=1
-DISABLE_COMPFIX=true
+ZSH_DISABLE_COMPFIX=true
 
 # Stub compinit + compdef so OMZ's call is a no-op. Buffer compdef calls.
 typeset -ga _compdef_buffer=()

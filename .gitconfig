@@ -113,3 +113,6 @@
 	autoStash = true
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[user]
+	name = Alejandro Alvarez
+	email = aluralma@gmail.com

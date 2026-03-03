@@ -258,8 +258,6 @@ mod_symlinks() {
 OMZ_PLUGIN_LIST=(
   "autoupdate|https://github.com/TamCore/autoupdate-oh-my-zsh-plugins"
   "zsh-autosuggestions|https://github.com/zsh-users/zsh-autosuggestions"
-  "zsh-syntax-highlighting|https://github.com/zsh-users/zsh-syntax-highlighting"
-  "zsh-history-substring-search|https://github.com/zsh-users/zsh-history-substring-search"
   "zsh-completions|https://github.com/zsh-users/zsh-completions"
   "zsh-better-npm-completion|https://github.com/lukechilds/zsh-better-npm-completion"
 )
@@ -320,17 +318,17 @@ mod_shell_tools() {
   else
     print_add "Pure prompt not found"
     if ask_apply; then
-      npm install --global pure-prompt 2>/dev/null || brew install pure 2>/dev/null || print_error "Could not install pure prompt"
+      brew install pure || print_error "Could not install pure prompt"
     fi
   fi
 
   # Pygments (for colorize plugin)
-  if python3 -c "import pygments" 2>/dev/null; then
+  if command -v pygmentize &>/dev/null; then
     print_success "Pygments"
   else
     print_add "Pygments not found (used by colorize plugin)"
     if ask_apply; then
-      pip3 install --user Pygments
+      brew install pygments
       print_success "Pygments installed"
     fi
   fi

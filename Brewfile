@@ -1,66 +1,55 @@
-tap "homebrew/bundle"
-tap "homebrew/services"
-brew "asciinema"
-brew "autoconf"
-brew "automake"
-brew "bash"
+# ─── Shell ───────────────────────────────────────────────────────────────────
+brew "bash"                        # macOS ships bash 3.2; this gives 5.x
 brew "bash-completion@2"
-brew "cabextract"
-brew "cmake"
-brew "coreutils"
-brew "curl"
-brew "entr"
-brew "ffmpeg"
-brew "findutils"
-brew "gettext"
-brew "gnu-sed"
-brew "pinentry"
-brew "gnupg"
-brew "go"
-brew "grc"
-brew "grep"
-brew "htop"
-brew "icu4c"
-brew "libxml2"
-brew "libyaml"
-brew "moreutils"
-brew "mtr"
-brew "nmap"
-brew "perl"
-brew "pidcat"
-brew "pinentry-mac"
-brew "pkg-config"
-brew "pstree"
-brew "pv"
-brew "python"
-brew "rename"
-brew "ruby"
-brew "screen"
-brew "terminal-notifier"
-brew "tree"
-brew "uv"
-brew "vim"
-brew "wget"
-brew "yarn"
-brew "zopfli"
 brew "zsh"
-brew "ripgrep"
-brew "fd"
-brew "bat"
-brew "eza"
-brew "fzf"
-brew "git-delta"
-brew "gh"
+brew "zsh-syntax-highlighting"
+brew "zsh-history-substring-search"
+brew "pure"
+
+# ─── Modern CLI replacements ─────────────────────────────────────────────────
+brew "bat"                         # cat
+brew "eza"                         # ls
+brew "fd"                          # find
+brew "ripgrep"                     # grep
+brew "zoxide"                      # cd
+brew "fzf"                         # fuzzy finder
+brew "git-delta"                   # diff
+
+# ─── Git & GitHub ────────────────────────────────────────────────────────────
 brew "git"
+brew "gh"
+
+# ─── GNU core utils ──────────────────────────────────────────────────────────
+brew "coreutils"
+brew "findutils"
+brew "gnu-sed"
+brew "grep"
+brew "moreutils"                   # sponge, ts, etc.
+
+# ─── Essential tools ─────────────────────────────────────────────────────────
+brew "curl"
+brew "wget"
 brew "jq"
+brew "vim"
+brew "htop"
+brew "tree"
+brew "pv"                          # pipe viewer
+brew "entr"                        # run cmd on file change
 brew "tldr"
-brew "zoxide"
-brew "httpie"
-cask "qlcolorcode"
-cask "qlimagesize"
-cask "qlstephen"
-cask "quicklook-csv"
-cask "quicklook-json"
-cask "suspicious-package"
-cask "tunnelblick"
-cask "wireshark"
+brew "mtr"                         # network diagnostics
+brew "nmap"
+
+# ─── GPG ─────────────────────────────────────────────────────────────────────
+brew "gnupg"
+brew "pinentry-mac"
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+brew "python"
+brew "uv"
+brew "pygments"                    # colorize zsh plugin
+
+# ─── Media ───────────────────────────────────────────────────────────────────
+brew "ffmpeg"
+
+# ─── Casks ───────────────────────────────────────────────────────────────────
+cask "suspicious-package"          # inspect .pkg installers

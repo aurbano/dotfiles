@@ -8,8 +8,11 @@
 
 !.vim/swaps/README
 
-# git credential file 
+# git credential file
 .gitconfig.local
+
+# Claude Code — machine-local permissions
+.claude/settings.local.json
 
 
 # Folder view configuration files

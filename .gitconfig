@@ -25,9 +25,11 @@
 	# Merge GitHub pull request on top of the current branch
 	mpr = "!f() { \
 		if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+			_default=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'); \
+			_default=${_default:-main}; \
 			git fetch origin refs/pull/$1/head:pr/$1 && \
-			git rebase main pr/$1 && \
-			git checkout main && \
+			git rebase $_default pr/$1 && \
+			git checkout $_default && \
 			git merge pr/$1 && \
 			git branch -D pr/$1 && \
 			git commit --amend -m \"$(git log -1 --pretty=%B)\n\nCloses #$1.\"; \
@@ -43,7 +45,7 @@
 	attributesfile = ~/.gitattributes
 	pager = delta
 	autocrlf = input
-	editor = vim
+	editor = nvim
 [color "branch"]
 	current = yellow reverse
 	local = yellow
@@ -60,6 +62,7 @@
 [merge]
     tool = opendiff
     conflictstyle = diff3
+    autostash = true
 
 [delta]
 	navigate = true
@@ -78,17 +81,11 @@
 	pushInsteadOf = "git://gist.github.com/"
 	pushInsteadOf = "https://gist.github.com/"
 
-# Any GitHub repo with my username should be checked out r/w by default
-# http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
-
-[url "git@github.com:aurbano/"]
-  insteadOf = "git://github.com/aurbano/"
 [help]
 	autocorrect = 1
 
 # push easily. http://stackoverflow.com/a/23918418/89484
 [push]
-	default = current
 	autoSetupRemote = true
 
 [include]
@@ -105,7 +102,11 @@
 	format = ssh
 [pull]
 	rebase = true
+[fetch]
+	prune = true
+
 [diff]
+	algorithm = histogram
 	colorMoved = zebra
 [init]
 	defaultBranch = main

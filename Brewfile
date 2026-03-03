@@ -30,7 +30,7 @@ brew "moreutils"                   # sponge, ts, etc.
 brew "curl"
 brew "wget"
 brew "jq"
-brew "vim"
+brew "neovim"
 brew "htop"
 brew "tree"
 brew "pv"                          # pipe viewer
@@ -43,6 +43,9 @@ brew "nmap"
 brew "gnupg"
 brew "pinentry-mac"
 
+# ─── Node ────────────────────────────────────────────────────────────────────
+brew "fnm"                         # fast node manager
+
 # ─── Python ──────────────────────────────────────────────────────────────────
 brew "python"
 brew "uv"
@@ -50,6 +53,9 @@ brew "pygments"                    # colorize zsh plugin
 
 # ─── Media ───────────────────────────────────────────────────────────────────
 brew "ffmpeg"
+
+# ─── Fonts ───────────────────────────────────────────────────────────────────
+cask "font-hack-nerd-font"         # nerd font for nvim/lualine icons
 
 # ─── Casks ───────────────────────────────────────────────────────────────────
 cask "suspicious-package"          # inspect .pkg installers

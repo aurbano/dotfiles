@@ -29,3 +29,11 @@ Thumbs.db
 
 # Compiled Python files
 *.pyc
+__pycache__/
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Local env
+.env
+.env.local

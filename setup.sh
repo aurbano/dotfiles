@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: ./setup.sh [--yes] [--dry-run] [--module NAME] [--reverse] [--status]"
       echo ""
-      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, vim, toolchains, macos"
+      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, macos"
       exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -179,65 +179,77 @@ mod_brewpkgs() {
 # Explicit symlink map
 declare -a SYMLINK_FILES=(
   .aliases
-  .condarc
   .curlrc
   .dircolors
   .functions
   .gitattributes
   .gitconfig
   .gitignore
-  .vimrc
   .zshrc
 )
 declare -a SYMLINK_DIRS=(
-  .vim
   bin
 )
+
+# Symlinks where the target is ~/.config/<name> instead of ~/<name>
+declare -a CONFIG_SYMLINK_DIRS=(
+  nvim
+)
+
+_apply_symlink() {
+  local source_path="$1"
+  local target_path="$2"
+  local label="$3"
+
+  if [[ ! -e "$source_path" ]]; then
+    print_warn "$label — source missing in dotfiles"
+    return
+  fi
+
+  if [[ -L "$target_path" ]]; then
+    local current_target
+    current_target="$(readlink "$target_path")"
+    if [[ "$current_target" == "$source_path" ]]; then
+      print_success "$label -> $source_path"
+    else
+      print_warn "$label -> $current_target (expected $source_path)"
+      if ask_apply; then
+        rm -f "$target_path"
+        ln -s "$source_path" "$target_path"
+        print_success "$label -> $source_path (fixed)"
+      fi
+    fi
+  elif [[ -e "$target_path" ]]; then
+    print_warn "$label exists (regular file, not symlink)"
+    ask_for_confirmation "Overwrite $label with symlink?"
+    if answer_is_yes && ! $DRY_RUN; then
+      rm -rf "$target_path"
+      ln -s "$source_path" "$target_path"
+      print_success "$label -> $source_path (replaced)"
+    fi
+  else
+    print_add "$label (will create)"
+    if ask_apply; then
+      mkdir -p "$(dirname "$target_path")"
+      ln -s "$source_path" "$target_path"
+      print_success "$label -> $source_path (created)"
+    fi
+  fi
+}
 
 mod_symlinks() {
   print_header "Symlinks"
 
   # Ensure cache dir exists
   mkdir -p ~/.cache/zsh
-  touch ~/.cache/zsh/.z
 
   for item in "${SYMLINK_FILES[@]}" "${SYMLINK_DIRS[@]}"; do
-    local source_path="$DOTFILES_DIR/$item"
-    local target_path="$HOME/$item"
+    _apply_symlink "$DOTFILES_DIR/$item" "$HOME/$item" "~/$item"
+  done
 
-    if [[ ! -e "$source_path" ]]; then
-      print_warn "$item — source missing in dotfiles"
-      continue
-    fi
-
-    if [[ -L "$target_path" ]]; then
-      local current_target
-      current_target="$(readlink "$target_path")"
-      if [[ "$current_target" == "$source_path" ]]; then
-        print_success "~/$item -> $source_path"
-      else
-        print_warn "~/$item -> $current_target (expected $source_path)"
-        if ask_apply; then
-          rm -f "$target_path"
-          ln -s "$source_path" "$target_path"
-          print_success "~/$item -> $source_path (fixed)"
-        fi
-      fi
-    elif [[ -e "$target_path" ]]; then
-      print_warn "~/$item exists (regular file, not symlink)"
-      ask_for_confirmation "Overwrite ~/$item with symlink?"
-      if answer_is_yes && ! $DRY_RUN; then
-        rm -rf "$target_path"
-        ln -s "$source_path" "$target_path"
-        print_success "~/$item -> $source_path (replaced)"
-      fi
-    else
-      print_add "~/$item (will create)"
-      if ask_apply; then
-        ln -s "$source_path" "$target_path"
-        print_success "~/$item -> $source_path (created)"
-      fi
-    fi
+  # ~/.config/<name> symlinks
+  for item in "${CONFIG_SYMLINK_DIRS[@]}"; do
+    _apply_symlink "$DOTFILES_DIR/$item" "$HOME/.config/$item" "~/.config/$item"
   done
 
   # Offer to create ~/.zshrc.local from example
@@ -294,14 +306,6 @@ mod_omz() {
     fi
   done
 
-  # Note about brew-sourced plugins
-  local brew_prefix="${BREW_PREFIX:-$(brew --prefix 2>/dev/null || echo /opt/homebrew)}"
-  if [[ -f "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    print_info "zsh-syntax-highlighting also available via brew (sourced in .zshrc)"
-  fi
-  if [[ -f "$brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
-    print_info "zsh-history-substring-search also available via brew (sourced in .zshrc)"
-  fi
 }
 
 # ─── Module: Shell tools (pure, pygments, git-open) ─────────────────────────
@@ -344,32 +348,38 @@ mod_shell_tools() {
   fi
 }
 
-# ─── Module: Vim ─────────────────────────────────────────────────────────────
+# ─── Module: Neovim ──────────────────────────────────────────────────────────
 mod_vim() {
-  print_header "Vim"
+  print_header "Neovim"
 
-  local plug_file="$HOME/.vim/autoload/plug.vim"
-  if [[ -f "$plug_file" ]]; then
-    print_success "vim-plug installed"
-  else
-    print_add "vim-plug not found (will install)"
+  if ! command -v nvim &>/dev/null; then
+    print_add "neovim not found"
     if ask_apply; then
-      curl -fLo "$plug_file" --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-      print_success "vim-plug installed"
+      brew install neovim
+      print_success "neovim installed"
     fi
+    return
   fi
 
-  local plugged_dir="$HOME/.vim/plugged"
-  if [[ -d "$plugged_dir" ]] && [[ "$(ls -A "$plugged_dir" 2>/dev/null)" ]]; then
-    local count
-    count="$(ls -1 "$plugged_dir" | wc -l | tr -d ' ')"
-    print_success "Vim plugins installed ($count plugins in plugged/)"
+  print_success "neovim ($(nvim --version | head -1))"
+
+  local lazy_dir="$HOME/.local/share/nvim/lazy/lazy.nvim"
+  if [[ -d "$lazy_dir" ]]; then
+    print_success "lazy.nvim installed"
   else
-    print_add "Vim plugins not installed"
+    print_add "lazy.nvim not installed (will bootstrap on first nvim launch)"
+    print_info "Run: nvim"
+  fi
+
+  # Nerd Font (required for lualine icons and nvim-web-devicons)
+  if system_profiler SPFontsDataType 2>/dev/null | grep -q "Hack Nerd Font"; then
+    print_success "Hack Nerd Font installed"
+  else
+    print_add "Hack Nerd Font not found (needed for nvim icons)"
     if ask_apply; then
-      vim +PlugInstall +qall
-      print_success "Vim plugins installed"
+      brew install --cask font-hack-nerd-font
+      print_success "Hack Nerd Font installed"
+      print_info "Set 'Hack Nerd Font Mono' in your terminal font settings"
     fi
   fi
 }
@@ -378,18 +388,17 @@ mod_vim() {
 mod_toolchains() {
   print_header "Toolchains"
 
-  # NVM
-  if [[ -d "$HOME/.nvm" ]] || [[ -s "$(brew --prefix 2>/dev/null)/opt/nvm/nvm.sh" ]]; then
-    print_success "NVM"
+  # fnm
+  if command -v fnm &>/dev/null; then
+    print_success "fnm ($(fnm --version 2>/dev/null))"
   else
-    print_add "NVM not found"
-    ask_for_confirmation "Install NVM?"
+    print_add "fnm not found"
+    ask_for_confirmation "Install fnm?"
     if answer_is_yes && ! $DRY_RUN; then
-      brew install nvm
-      mkdir -p "$HOME/.nvm"
-      print_success "NVM installed"
+      brew install fnm
+      print_success "fnm installed"
     else
-      print_skip "NVM skipped"
+      print_skip "fnm skipped"
     fi
   fi
 
@@ -562,11 +571,11 @@ show_status() {
     print_warn "Oh My Zsh not installed"
   fi
 
-  # Vim plugins
-  if [[ -d "$HOME/.vim/plugged" ]] && [[ "$(ls -A "$HOME/.vim/plugged" 2>/dev/null)" ]]; then
-    print_success "Vim plugins"
+  # Neovim
+  if command -v nvim &>/dev/null; then
+    print_success "neovim ($(nvim --version | head -1))"
   else
-    print_warn "Vim plugins not installed"
+    print_warn "neovim not installed"
   fi
 
   # Key tools
@@ -581,7 +590,7 @@ show_status() {
 
 # ─── Run modules ────────────────────────────────────────────────────────────
 
-ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools vim toolchains macos)
+ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains macos)
 
 run_module() {
   case "$1" in
@@ -591,7 +600,7 @@ run_module() {
     symlinks)     mod_symlinks ;;
     omz)          mod_omz ;;
     shell-tools)  mod_shell_tools ;;
-    vim)          mod_vim ;;
+    nvim|vim)     mod_vim ;;
     toolchains)   mod_toolchains ;;
     macos)        mod_macos ;;
     *) print_error "Unknown module: $1"; exit 1 ;;

@@ -27,24 +27,13 @@ alias flushdns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper
 alias trimcopy="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
-alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
+alias cleanup="command find . -name '*.DS_Store' -type f -delete"
 
 # File size
 alias fs="stat -f \"%z bytes\""
 
 # Empty the Trash on all mounted volumes and the main HDD
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
-
-# HTTP verbs (curl-based)
-alias GET='curl -sS'
-alias HEAD='curl -sS -I'
-alias POST='curl -sS -X POST'
-alias PUT='curl -sS -X PUT'
-alias DELETE='curl -sS -X DELETE'
-
-# Stop autocorrecting npm & yarn
-alias npm='nocorrect npm'
-alias yarn='nocorrect yarn'
 
 # Modern tool aliases (guarded)
 if command -v bat &>/dev/null; then
@@ -60,4 +49,16 @@ fi
 
 if command -v fd &>/dev/null; then
   alias find='fd'
+fi
+
+if command -v rg &>/dev/null; then
+  alias grep='rg'
+fi
+
+if command -v delta &>/dev/null; then
+  alias diff='delta'
+fi
+
+if command -v nvim &>/dev/null; then
+  alias vim='nvim'
 fi

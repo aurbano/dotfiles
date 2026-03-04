@@ -21,7 +21,7 @@
 	<key>AiMaxTokens</key>
 	<integer>400000</integer>
 	<key>AiModel</key>
-	<string>gpt-5.1</string>
+	<string>gpt-5.2</string>
 	<key>AiResponseMaxTokens</key>
 	<integer>128000</integer>
 	<key>AitermURL</key>
@@ -297,7 +297,7 @@
 			<key>Background Image Is Tiled</key>
 			<true/>
 			<key>Background Image Location</key>
-			<string>/Users/alex/dotfiles/kali.jpg</string>
+			<string>/Users/alex/dotfiles/assets/kali.jpg</string>
 			<key>Background Image Mode</key>
 			<integer>2</integer>
 			<key>Blend</key>

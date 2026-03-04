@@ -110,3 +110,13 @@ auto-ls () {
 	fi
 }
 chpwd_functions=( auto-ls $chpwd_functions )
+
+# Quick LLM query
+ai() {
+  echo "$*" | llm
+}
+
+# AI-generated commit message from staged diff
+gcai() {
+  git diff --cached | llm "Write a concise git commit message for these changes. Just the message, no explanation."
+}

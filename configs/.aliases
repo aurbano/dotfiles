@@ -9,7 +9,7 @@ alias hosts='sudo $EDITOR /etc/hosts'   # yes I occasionally 127.0.0.1 twitter.c
 
 # GIT STUFF
 
-alias gclean='git branch --merged | grep -v "\*" | grep -v "master" | grep -v "main" | grep -v "develop" | grep -v "staging" | xargs -n 1 git branch -d'
+alias gclean='git branch --merged | grep -Ev "^\*|master|main|develop|staging" | xargs -r git branch -d'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -36,8 +36,11 @@ alias fs="stat -f \"%z bytes\""
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
 
 # Modern tool aliases (guarded)
+export LESS='-R --use-color'
+
 if command -v bat &>/dev/null; then
   alias cat='bat --paging=never'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 if command -v eza &>/dev/null; then
@@ -62,3 +65,11 @@ fi
 if command -v nvim &>/dev/null; then
   alias vim='nvim'
 fi
+
+# Benchmarking
+alias zsh-bench='for i in $(seq 10); do /usr/bin/time zsh -i -c exit; done 2>&1 | grep real'
+
+# Claude Code
+alias cc='claude'
+alias ccc='claude --continue'
+alias ccr='claude --resume'

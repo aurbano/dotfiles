@@ -6,7 +6,7 @@ font-size = 14
 theme = Catppuccin Mocha
 
 # Background (kali dragon)
-background-image = ~/dotfiles/kali.jpg
+background-image = ~/dotfiles/assets/kali.jpg
 background-image-opacity = 0.10
 background-image-fit = cover
 

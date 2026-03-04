@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: ./setup.sh [--yes] [--dry-run] [--module NAME] [--reverse] [--status]"
       echo ""
-      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, macos"
+      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, macos"
       exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -603,9 +603,103 @@ show_status() {
   done
 }
 
+# ─── Module: LLM CLI ────────────────────────────────────────────────────────
+mod_llm() {
+  print_header "LLM CLI"
+
+  if ! command -v llm &>/dev/null; then
+    print_warn "llm not installed — run the brew module first"
+    return
+  fi
+
+  print_success "llm $(llm --version 2>/dev/null)"
+
+  # Detect configured keys via the keys file
+  local keys_file
+  keys_file="$(llm keys path 2>/dev/null)"
+  local configured_keys=()
+  if [[ -f "$keys_file" ]]; then
+    while IFS= read -r key; do
+      [[ -n "$key" ]] && configured_keys+=("$key")
+    done < <(python3 -c "
+import json, sys
+try:
+    d = json.loads(open('$keys_file').read())
+    print('\n'.join(d.keys()))
+except Exception:
+    pass
+" 2>/dev/null)
+  fi
+
+  if [[ ${#configured_keys[@]} -gt 0 ]]; then
+    print_success "Configured keys: ${configured_keys[*]}"
+    echo ""
+    ask_for_confirmation "Set up an additional provider?"
+    answer_is_yes || return
+  else
+    print_add "No API keys configured yet"
+  fi
+
+  echo ""
+  print_info "Choose a provider to configure:"
+  printf "    %s\n" \
+    "1) OpenAI      (gpt-4o, no plugin needed)" \
+    "2) Anthropic   (claude-3.5-sonnet, plugin: llm-anthropic)" \
+    "3) Gemini      (gemini-1.5-flash, plugin: llm-gemini)" \
+    "4) Mistral     (mistral-large, plugin: llm-mistral)" \
+    "5) Skip"
+  echo ""
+  printf "${YELLOW}  [?] Select [1-5]: ${NC}"
+  read -rn 1 choice
+  printf "\n\n"
+
+  local plugin="" key_name="" provider_name=""
+  case "$choice" in
+    1) provider_name="OpenAI";    plugin="";              key_name="openai"    ;;
+    2) provider_name="Anthropic"; plugin="llm-anthropic"; key_name="anthropic" ;;
+    3) provider_name="Gemini";    plugin="llm-gemini";    key_name="gemini"    ;;
+    4) provider_name="Mistral";   plugin="llm-mistral";   key_name="mistral"   ;;
+    *) print_skip "LLM setup skipped"; return ;;
+  esac
+
+  # Install plugin if needed
+  if [[ -n "$plugin" ]]; then
+    if llm plugins 2>/dev/null | grep -q "\"$plugin\""; then
+      print_success "$plugin already installed"
+    else
+      print_add "Installing ${plugin}..."
+      if ! $DRY_RUN; then
+        llm install "$plugin" && print_success "$plugin installed"
+      fi
+    fi
+  fi
+
+  # Check if this key is already set
+  if [[ ${#configured_keys[@]} -gt 0 ]] && printf '%s\n' "${configured_keys[@]}" | grep -qx "$key_name"; then
+    print_success "$provider_name key already set"
+    ask_for_confirmation "Replace it?"
+    answer_is_yes || return
+  fi
+
+  # Prompt for key (hidden input)
+  printf "${YELLOW}  [?] $provider_name API key (hidden): ${NC}"
+  read -rs api_key
+  printf "\n"
+
+  if [[ -z "$api_key" ]]; then
+    print_warn "No key entered — skipping"
+    return
+  fi
+
+  if ! $DRY_RUN; then
+    printf '%s' "$api_key" | llm keys set "$key_name"
+    print_success "$provider_name API key saved"
+  fi
+}
+
 # ─── Run modules ────────────────────────────────────────────────────────────
 
-ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains macos)
+ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm macos)
 
 run_module() {
   case "$1" in
@@ -617,6 +711,7 @@ run_module() {
     shell-tools)  mod_shell_tools ;;
     nvim|vim)     mod_vim ;;
     toolchains)   mod_toolchains ;;
+    llm)          mod_llm ;;
     macos)        mod_macos ;;
     *) print_error "Unknown module: $1"; exit 1 ;;
   esac

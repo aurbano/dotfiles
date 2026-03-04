@@ -67,6 +67,10 @@
 [delta]
 	navigate = true
 	line-numbers = true
+	side-by-side = true
+
+[interactive]
+	diffFilter = delta --color-only
 
 # rewrites
 [url "git@github.com:"]

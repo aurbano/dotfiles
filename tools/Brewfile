@@ -30,6 +30,9 @@ brew "moreutils"                   # sponge, ts, etc.
 brew "curl"
 brew "wget"
 brew "jq"
+brew "yq"                          # jq for YAML
+brew "xh"                          # modern curl/httpie alternative
+brew "llm"                         # LLM CLI (Simon Willison)
 brew "neovim"
 brew "htop"
 brew "tree"

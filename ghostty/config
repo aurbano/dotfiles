@@ -7,7 +7,7 @@ theme = Catppuccin Mocha
 
 # Background (kali dragon)
 background-image = ~/dotfiles/kali.jpg
-background-image-opacity = 0.15
+background-image-opacity = 0.10
 background-image-fit = cover
 
 # Window

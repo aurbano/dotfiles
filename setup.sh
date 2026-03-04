@@ -118,7 +118,7 @@ mod_brewpkgs() {
     return
   fi
 
-  local brewfile="$DOTFILES_DIR/Brewfile"
+  local brewfile="$DOTFILES_DIR/tools/Brewfile"
   if [[ ! -f "$brewfile" ]]; then
     print_error "Brewfile not found at $brewfile"
     return
@@ -184,11 +184,11 @@ declare -a SYMLINK_FILES=(
   .functions
   .gitattributes
   .gitconfig
-  .gitignore
   .zshrc
 )
 declare -a SYMLINK_DIRS=(
   bin
+  .gitignore
 )
 
 # Symlinks where the target is ~/.config/<name> instead of ~/<name>
@@ -244,7 +244,10 @@ mod_symlinks() {
   # Ensure cache dir exists
   mkdir -p ~/.cache/zsh
 
-  for item in "${SYMLINK_FILES[@]}" "${SYMLINK_DIRS[@]}"; do
+  for item in "${SYMLINK_FILES[@]}"; do
+    _apply_symlink "$DOTFILES_DIR/configs/$item" "$HOME/$item" "~/$item"
+  done
+  for item in "${SYMLINK_DIRS[@]}"; do
     _apply_symlink "$DOTFILES_DIR/$item" "$HOME/$item" "~/$item"
   done
 
@@ -258,7 +261,7 @@ mod_symlinks() {
     print_add "~/.zshrc.local does not exist"
     ask_for_confirmation "Create from .zshrc.local.example?"
     if answer_is_yes && ! $DRY_RUN; then
-      cp "$DOTFILES_DIR/.zshrc.local.example" "$HOME/.zshrc.local"
+      cp "$DOTFILES_DIR/configs/.zshrc.local.example" "$HOME/.zshrc.local"
       print_success "~/.zshrc.local created (edit to customize)"
     fi
   else
@@ -373,7 +376,7 @@ mod_vim() {
   fi
 
   # Nerd Font (required for lualine icons and nvim-web-devicons)
-  if system_profiler SPFontsDataType 2>/dev/null | grep -q "Hack Nerd Font"; then
+  if brew list --cask font-hack-nerd-font &>/dev/null; then
     print_success "Hack Nerd Font installed"
   else
     print_add "Hack Nerd Font not found (needed for nvim icons)"
@@ -470,12 +473,12 @@ mod_macos() {
     return
   fi
 
-  print_info "Will run .osx to set macOS defaults (requires sudo)"
+  print_info "Will run tools/macos-defaults.sh to set macOS defaults (requires sudo)"
   print_info "Categories: General UI, Keyboard, Screen, Finder, Dock, Terminal, Activity Monitor, TextEdit, Chrome, Mail"
 
   ask_for_confirmation "Apply macOS defaults?"
   if answer_is_yes && ! $DRY_RUN; then
-    bash "$DOTFILES_DIR/.osx"
+    bash "$DOTFILES_DIR/tools/macos-defaults.sh"
     print_success "macOS defaults applied"
   else
     print_skip "macOS defaults skipped"
@@ -491,7 +494,7 @@ mod_reverse() {
     return
   fi
 
-  local brewfile="$DOTFILES_DIR/Brewfile"
+  local brewfile="$DOTFILES_DIR/tools/Brewfile"
 
   # Snapshot: Brewfile wants vs installed leaves
   local tmp_wanted tmp_installed
@@ -548,7 +551,18 @@ show_status() {
 
   # Symlinks
   local ok=0 missing=0 wrong=0
-  for item in "${SYMLINK_FILES[@]}" "${SYMLINK_DIRS[@]}"; do
+  for item in "${SYMLINK_FILES[@]}"; do
+    local target="$HOME/$item"
+    local source="$DOTFILES_DIR/configs/$item"
+    if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+      ((ok++))
+    elif [[ -e "$target" ]]; then
+      ((wrong++))
+    else
+      ((missing++))
+    fi
+  done
+  for item in "${SYMLINK_DIRS[@]}"; do
     local target="$HOME/$item"
     local source="$DOTFILES_DIR/$item"
     if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then

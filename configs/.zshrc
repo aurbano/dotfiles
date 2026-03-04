@@ -61,8 +61,8 @@ source $ZSH/oh-my-zsh.sh
 unfunction compinit compdef 2>/dev/null
 
 # ─── User config ────────────────────────────────────────────────────────────
-source ~/dotfiles/.functions
-source ~/dotfiles/.aliases
+source ~/dotfiles/configs/.functions
+source ~/dotfiles/configs/.aliases
 
 # ─── Zsh config modules ─────────────────────────────────────────────────────
 for _zsh_conf in ~/dotfiles/zsh/*.zsh; do

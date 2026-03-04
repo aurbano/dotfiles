@@ -47,7 +47,6 @@ brew "pinentry-mac"
 brew "fnm"                         # fast node manager
 
 # ─── Python ──────────────────────────────────────────────────────────────────
-brew "python"
 brew "uv"
 brew "pygments"                    # colorize zsh plugin
 

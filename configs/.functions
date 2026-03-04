@@ -111,6 +111,29 @@ auto-ls () {
 }
 chpwd_functions=( auto-ls $chpwd_functions )
 
+# Smart tmux session switcher
+# Usage: t [name]  — create or attach a named session; no args = fzf picker or "main"
+t() {
+  local session="${1:-}"
+
+  if [[ -n "$TMUX" ]]; then
+    # Already inside tmux: switch sessions instead of attaching
+    if [[ -n "$session" ]]; then
+      tmux new-session -d -s "$session" 2>/dev/null
+      tmux switch-client -t "$session"
+    elif command -v fzf &>/dev/null; then
+      tmux list-sessions -F "#{session_name}" \
+        | fzf --height=10 --reverse --prompt="session: " \
+        | xargs -r tmux switch-client -t
+    else
+      tmux choose-tree -s
+    fi
+  else
+    # Outside tmux: create or attach (new-session -A attaches if already exists)
+    tmux new-session -A -s "${session:-main}"
+  fi
+}
+
 # Quick LLM query
 ai() {
   echo "$*" | llm

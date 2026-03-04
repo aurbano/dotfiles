@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: ./setup.sh [--yes] [--dry-run] [--module NAME] [--reverse] [--status]"
       echo ""
-      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, macos"
+      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, tmux, macos"
       exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -195,6 +195,7 @@ declare -a SYMLINK_DIRS=(
 declare -a CONFIG_SYMLINK_DIRS=(
   nvim
   ghostty
+  tmux
 )
 
 _apply_symlink() {
@@ -464,6 +465,32 @@ mod_toolchains() {
   fi
 }
 
+# ─── Module: Tmux ────────────────────────────────────────────────────────────
+mod_tmux() {
+  print_header "Tmux"
+
+  if ! command -v tmux &>/dev/null; then
+    print_add "tmux not found"
+    if ask_apply; then
+      brew install tmux
+      print_success "tmux installed"
+    fi
+  else
+    print_success "tmux ($(tmux -V))"
+  fi
+
+  local tpm_dir="$HOME/.tmux/plugins/tpm"
+  if [[ -d "$tpm_dir" ]]; then
+    print_success "TPM (tmux plugin manager)"
+  else
+    print_add "TPM not found (will clone)"
+    if ask_apply; then
+      git clone https://github.com/tmux-plugins/tpm "$tpm_dir"
+      print_success "TPM cloned — open tmux and press prefix + I to install plugins"
+    fi
+  fi
+}
+
 # ─── Module: macOS defaults ─────────────────────────────────────────────────
 mod_macos() {
   print_header "macOS Defaults"
@@ -699,7 +726,7 @@ except Exception:
 
 # ─── Run modules ────────────────────────────────────────────────────────────
 
-ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm macos)
+ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm tmux macos)
 
 run_module() {
   case "$1" in
@@ -712,6 +739,7 @@ run_module() {
     nvim|vim)     mod_vim ;;
     toolchains)   mod_toolchains ;;
     llm)          mod_llm ;;
+    tmux)         mod_tmux ;;
     macos)        mod_macos ;;
     *) print_error "Unknown module: $1"; exit 1 ;;
   esac

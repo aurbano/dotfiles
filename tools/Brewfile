@@ -26,6 +26,9 @@ brew "gnu-sed"
 brew "grep"
 brew "moreutils"                   # sponge, ts, etc.
 
+# ─── Terminal multiplexer ────────────────────────────────────────────────────
+brew "tmux"
+
 # ─── Essential tools ─────────────────────────────────────────────────────────
 brew "curl"
 brew "wget"

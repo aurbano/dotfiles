@@ -24,6 +24,7 @@ The setup script is interactive — it checks what's missing and asks before mak
 | `nvim/` | Neovim config — lazy.nvim, treesitter, telescope, catppuccin |
 | `tools/Brewfile` | All Homebrew dependencies |
 | `configs/.curlrc` | Sensible curl defaults |
+| `tmux/tmux.conf` | Tmux config — Catppuccin theme, vim bindings, session restore |
 
 ## Neovim keymaps
 
@@ -37,6 +38,75 @@ Leader is `,`.
 | `,fb` | Switch buffer |
 | `gb` / `gB` | Next / prev buffer |
 | `,x` | Close buffer |
+
+## Tmux
+
+Prefix is `Ctrl-a`.
+
+After first install, open tmux and press `prefix + I` to install plugins (TPM).
+
+### Sessions
+
+| Command | Action |
+|---------|--------|
+| `t` | Create or attach session named `main` (fzf picker if inside tmux) |
+| `t <name>` | Create or attach named session |
+| `tl` | List sessions |
+| `tk` | Kill current session |
+| `prefix + $` | Rename current session |
+| `prefix + s` | Session list / switcher |
+
+### Windows (tabs)
+
+| Key | Action |
+|-----|--------|
+| `prefix + c` | New window (opens in current dir) |
+| `prefix + ,` | Rename window |
+| `prefix + n` / `p` | Next / prev window |
+| `prefix + <number>` | Jump to window by number |
+| `prefix + &` | Kill window |
+
+### Panes (splits)
+
+| Key | Action |
+|-----|--------|
+| `prefix + \|` | Split vertically (side by side) |
+| `prefix + -` | Split horizontally (top/bottom) |
+| `prefix + h/j/k/l` | Navigate panes |
+| `prefix + H/J/K/L` | Resize pane (repeatable) |
+| `prefix + z` | Zoom pane (toggle fullscreen) |
+| `prefix + x` | Kill pane |
+| `prefix + {` / `}` | Swap pane left / right |
+
+### Copy mode
+
+| Key | Action |
+|-----|--------|
+| `prefix + [` | Enter copy mode |
+| `v` | Start selection (vi mode) |
+| `y` | Copy selection to clipboard and exit |
+| `q` | Quit copy mode |
+
+### Sessions — save & restore (tmux-resurrect)
+
+| Key | Action |
+|-----|--------|
+| `prefix + Ctrl-s` | Save session (panes, layout, cwd) |
+| `prefix + Ctrl-r` | Restore saved session |
+
+### Terminal integration
+
+**iTerm2** — run `tit` to open tmux in control mode. iTerm2 maps tmux windows to native tabs and panes to native splits. Transparent once connected.
+
+**Ghostty** — works out of the box. True color is enabled via `tmux-256color` in the config.
+
+### Misc
+
+| Key | Action |
+|-----|--------|
+| `prefix + r` | Reload tmux config |
+| `prefix + d` | Detach from session |
+| `prefix + ?` | Show all key bindings |
 
 ## Machine-local overrides
 

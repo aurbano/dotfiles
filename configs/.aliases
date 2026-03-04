@@ -69,6 +69,12 @@ fi
 # Benchmarking
 alias zsh-bench='for i in $(seq 10); do /usr/bin/time zsh -i -c exit; done 2>&1 | grep real'
 
+# Tmux
+alias tl='tmux list-sessions 2>/dev/null || echo "no sessions"'
+alias tk='tmux kill-session'
+# iTerm2 tmux control mode — tmux windows/panes become native iTerm2 tabs/splits
+alias tit='tmux -CC new-session -A -s main'
+
 # Claude Code
 alias cc='claude'
 alias ccc='claude --continue'

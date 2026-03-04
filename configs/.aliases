@@ -27,7 +27,7 @@ alias flushdns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper
 alias trimcopy="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
-alias cleanup="command find . -name '*.DS_Store' -type f -delete"
+alias cleands="command find . -name '*.DS_Store' -type f -delete"
 
 # File size
 alias fs="stat -f \"%z bytes\""

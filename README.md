@@ -16,14 +16,14 @@ The setup script is interactive — it checks what's missing and asks before mak
 
 | File | Purpose |
 |------|---------|
-| `.zshrc` | Shell config — Oh My Zsh, pure prompt, deferred compinit |
+| `configs/.zshrc` | Shell config — Oh My Zsh, pure prompt, deferred compinit |
 | `zsh/` | Modular shell config (history, node, python, tools, gcloud) |
-| `.aliases` | Aliases with modern tool replacements (bat, eza, fd, rg, delta) |
-| `.functions` | Shell functions (extract, port, serve, whois, …) |
-| `.gitconfig` | Git config — delta pager, histogram diffs, rebase defaults |
+| `configs/.aliases` | Aliases with modern tool replacements (bat, eza, fd, rg, delta) |
+| `configs/.functions` | Shell functions (extract, port, serve, whois, …) |
+| `configs/.gitconfig` | Git config — delta pager, histogram diffs, rebase defaults |
 | `nvim/` | Neovim config — lazy.nvim, treesitter, telescope, catppuccin |
-| `Brewfile` | All Homebrew dependencies |
-| `.curlrc` | Sensible curl defaults |
+| `tools/Brewfile` | All Homebrew dependencies |
+| `configs/.curlrc` | Sensible curl defaults |
 
 ## Neovim keymaps
 

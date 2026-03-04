@@ -1,14 +1,8 @@
 # Machine-specific configuration — copy to ~/.zshrc.local and customize
 # This file is sourced at the end of .zshrc
 
-# ─── Company-specific aliases ────────────────────────────────────────────────
-# alias tim='uvx --from git+ssh://git@github.com/runwayml/timataka timataka'
-# alias timd='AWS_PROFILE=infra tim download --bucket runway-timora-instrumentation-stage --prefix gyros -o merged.json'
-# alias tui='cd ~/assistant/tui && uv run todo_tui.py'
-
 # ─── AWS ─────────────────────────────────────────────────────────────────────
-# export RW_USER=aalvarez
-# export AWS_PROFILE=api
+# export AWS_PROFILE=default
 
 # awslogin() {
 #   local profile="$1"
@@ -18,7 +12,7 @@
 #   fi
 #   if ! aws sts get-caller-identity --profile="$profile" &>/dev/null; then
 #     echo "Credentials expired or invalid, logging in..."
-#     aws sso login --sso-session runway
+#     aws sso login --sso-session mycompany
 #   fi
 #   export AWS_PROFILE="$profile"
 #   echo "AWS_PROFILE=$profile"

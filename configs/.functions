@@ -113,6 +113,7 @@ chpwd_functions=( auto-ls $chpwd_functions )
 
 # Smart tmux session switcher
 # Usage: t [name]  — create or attach a named session; no args = fzf picker or "main"
+(( $+aliases[t] )) && unalias t
 t() {
   local session="${1:-}"
 

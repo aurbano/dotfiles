@@ -67,7 +67,7 @@
 [delta]
 	navigate = true
 	line-numbers = true
-	side-by-side = true
+	side-by-side = false
 
 [interactive]
 	diffFilter = delta --color-only

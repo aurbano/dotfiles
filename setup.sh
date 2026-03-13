@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: ./setup.sh [--yes] [--dry-run] [--module NAME] [--reverse] [--status]"
       echo ""
-      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, tmux, macos"
+      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, tmux, claude, macos"
       exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -491,6 +491,128 @@ mod_tmux() {
   fi
 }
 
+# ─── Module: Claude Code ─────────────────────────────────────────────────────
+
+_install_brew_pkg() {
+  local pkg="$1"
+  if command -v "$pkg" &>/dev/null; then
+    print_success "$pkg"
+  else
+    print_add "$pkg (will install via brew)"
+    if ask_apply; then
+      brew install "$pkg" && print_success "$pkg installed"
+    fi
+  fi
+}
+
+_install_brew_tap_pkg() {
+  local tap="$1"
+  local cmd="$2"
+  if command -v "$cmd" &>/dev/null; then
+    print_success "$cmd"
+  else
+    print_add "$cmd (will install via brew tap $tap)"
+    if ask_apply; then
+      brew install "$tap" && print_success "$cmd installed"
+    fi
+  fi
+}
+
+_install_uv_tool() {
+  local pkg="$1"
+  local cmd="${2:-$1}"
+  if command -v "$cmd" &>/dev/null; then
+    print_success "$cmd"
+  else
+    print_add "$cmd (will install via uv tool)"
+    if ask_apply; then
+      uv tool install "$pkg" && print_success "$cmd installed"
+    fi
+  fi
+}
+
+_install_cargo_crate() {
+  local crate="$1"
+  local cmd="${2:-$1}"
+  if command -v "$cmd" &>/dev/null; then
+    print_success "$cmd"
+  else
+    print_add "$cmd (will install via cargo)"
+    if ask_apply; then
+      cargo install "$crate" && print_success "$cmd installed"
+    fi
+  fi
+}
+
+_install_pnpm_global() {
+  local pkg="$1"
+  local cmd="${2:-$1}"
+  if command -v "$cmd" &>/dev/null; then
+    print_success "$cmd"
+  else
+    print_add "$cmd (will install via pnpm)"
+    if ask_apply; then
+      pnpm add -g "$pkg" && print_success "$cmd installed"
+    fi
+  fi
+}
+
+mod_claude() {
+  print_header "Claude Code"
+
+  # --- Symlink config files into ~/.claude/ ---
+  mkdir -p "$HOME/.claude" "$HOME/.claude/agents"
+
+  local claude_files=(CLAUDE.md settings.json statusline.sh enforce-package-manager.sh)
+  for item in "${claude_files[@]}"; do
+    _apply_symlink "$DOTFILES_DIR/claude/$item" "$HOME/.claude/$item" "~/.claude/$item"
+  done
+  _apply_symlink "$DOTFILES_DIR/claude/agents/principal-code-reviewer.md" \
+    "$HOME/.claude/agents/principal-code-reviewer.md" \
+    "~/.claude/agents/principal-code-reviewer.md"
+
+  # --- Install dev tool prerequisites ---
+  print_info "Checking dev tool prerequisites..."
+
+  # Brew packages
+  if command -v brew &>/dev/null; then
+    _install_brew_pkg ast-grep
+    _install_brew_pkg shellcheck
+    _install_brew_pkg shfmt
+    _install_brew_pkg actionlint
+    _install_brew_pkg zizmor
+    _install_brew_tap_pkg macos-trash trash
+    _install_brew_tap_pkg timvw/tap/wt wt
+  else
+    print_warn "Homebrew not available — skipping brew packages"
+  fi
+
+  # Python tools (via uv)
+  if command -v uv &>/dev/null; then
+    _install_uv_tool ruff
+    _install_uv_tool ty
+    _install_uv_tool pip-audit
+  else
+    print_warn "uv not available — skipping Python tools"
+  fi
+
+  # Cargo crates
+  if command -v cargo &>/dev/null; then
+    _install_cargo_crate prek
+    _install_cargo_crate cargo-deny
+    _install_cargo_crate cargo-careful
+  else
+    print_warn "cargo not available — skipping Rust tools"
+  fi
+
+  # Node tools (via pnpm)
+  if command -v pnpm &>/dev/null; then
+    _install_pnpm_global oxlint
+  else
+    print_warn "pnpm not available — skipping Node tools"
+  fi
+}
+
 # ─── Module: macOS defaults ─────────────────────────────────────────────────
 mod_macos() {
   print_header "macOS Defaults"
@@ -726,7 +848,7 @@ except Exception:
 
 # ─── Run modules ────────────────────────────────────────────────────────────
 
-ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm tmux macos)
+ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm tmux claude macos)
 
 run_module() {
   case "$1" in
@@ -740,6 +862,7 @@ run_module() {
     toolchains)   mod_toolchains ;;
     llm)          mod_llm ;;
     tmux)         mod_tmux ;;
+    claude)       mod_claude ;;
     macos)        mod_macos ;;
     *) print_error "Unknown module: $1"; exit 1 ;;
   esac

@@ -14,6 +14,7 @@
 - `configs/.functions` — shell functions
 - `configs/.gitconfig` — git config
 - `tools/Brewfile` — Homebrew packages
+- `claude/` — Claude Code config (CLAUDE.md, settings, hooks, agents)
 
 ## Notes
 - Run `brew bundle --file=tools/Brewfile` after editing the Brewfile

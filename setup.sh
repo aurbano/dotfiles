@@ -257,6 +257,10 @@ mod_symlinks() {
     _apply_symlink "$DOTFILES_DIR/$item" "$HOME/.config/$item" "~/.config/$item"
   done
 
+  # ~/.kube/kubie.yaml (kubie expects config here, not in ~/)
+  mkdir -p "$HOME/.kube"
+  _apply_symlink "$DOTFILES_DIR/configs/.kubie.yaml" "$HOME/.kube/kubie.yaml" "~/.kube/kubie.yaml"
+
   # Offer to create ~/.zshrc.local from example
   if [[ ! -f "$HOME/.zshrc.local" ]]; then
     print_add "~/.zshrc.local does not exist"
@@ -743,7 +747,7 @@ show_status() {
   fi
 
   # Key tools
-  for tool in bat eza fd fzf rg delta zoxide git gh node pyenv cargo gcloud pnpm; do
+  for tool in bat eza fd fzf rg delta zoxide git gh node pyenv cargo gcloud pnpm kubie; do
     if command -v "$tool" &>/dev/null; then
       print_success "$tool"
     else

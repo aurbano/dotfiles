@@ -59,6 +59,9 @@ brew "pygments"                    # colorize zsh plugin
 # ─── Media ───────────────────────────────────────────────────────────────────
 brew "ffmpeg"
 
+# ─── Kubernetes ───────────────────────────────────────────────────────────────
+brew "kubie"                       # k8s context/namespace switcher (per-shell isolation)
+
 # ─── Fonts ───────────────────────────────────────────────────────────────────
 cask "font-hack-nerd-font"         # nerd font for nvim/lualine icons
 

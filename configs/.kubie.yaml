@@ -1,0 +1,22 @@
+# Kubie configuration — https://github.com/kubie-org/kubie
+shell: zsh
+
+# Disable kubie's own prompt injection — we handle it via RPS1 in
+# zsh/kubernetes.zsh so it integrates cleanly with Pure prompt.
+disable_kubie_prompt: true
+
+# Right-prompt not needed since we disabled the built-in prompt entirely.
+zsh_use_rps1: false
+
+# Validate namespace exists before switching (catches typos).
+validate_namespaces: true
+
+# Kubeconfig sources — add more glob patterns as needed.
+kubeconfig:
+  include:
+    - ~/.kube/config
+    - ~/.kube/*.yml
+    - ~/.kube/*.yaml
+    - ~/.kube/configs/*.yml
+    - ~/.kube/configs/*.yaml
+  exclude: []

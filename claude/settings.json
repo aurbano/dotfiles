@@ -23,8 +23,8 @@
     "autoAllowBashIfSandboxed": true
   },
   "alwaysThinkingEnabled": true,
-  "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true,
   "Notification": [
     {
       "matcher": "",

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # ~/.osx — macOS defaults
 # Run: sh .osx

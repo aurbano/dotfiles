@@ -78,6 +78,8 @@ When adding dependencies, CI actions, or tool versions, always look up the curre
 
 Prefer `ast-grep` over ripgrep when searching for code structure (function calls, class definitions, imports, pattern matching across arguments). Use ripgrep for literal strings and log messages.
 
+**Heads up:** on this machine `grep` is aliased to `rg` in the interactive shell, so typing `grep` invokes ripgrep — whose flag set differs from GNU/BSD grep (e.g. `-E` is the default, `-P` is unsupported, `-r` is implicit, file-name filtering uses `--glob`/`--type`). Call `rg` directly and use its flags rather than relying on grep muscle memory.
+
 ### Python
 
 **Runtime:** 3.13 with `uv venv`

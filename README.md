@@ -12,6 +12,14 @@ cd ~/dotfiles
 
 The setup script is interactive — it checks what's missing and asks before making changes. Run with `--yes` to apply everything non-interactively, or `--module <name>` to run a single step.
 
+## Update
+
+```bash
+./update.sh
+```
+
+Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + treesitter), Oh My Zsh plugins, TPM, and language toolchains (rustup, uv tools, pnpm globals, fnm LTS). Non-interactive by default; use `--dry-run` to preview or `--module <name>` for a single step.
+
 ## What's included
 
 | File | Purpose |

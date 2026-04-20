@@ -3,7 +3,9 @@ set -euo pipefail
 
 # ─── Dotfiles setup ─────────────────────────────────────────────────────────
 # Replaces: setup-a-new-machine.sh, setup-plugins.sh, custom_plugins.zsh,
-#           symlink-setup.sh, brew.sh, update.sh
+#           symlink-setup.sh, brew.sh
+#
+# For periodic upkeep (brew upgrade, nvim plugin sync, etc.), see update.sh.
 #
 # Usage:
 #   ./setup.sh                     # Full interactive run
@@ -278,9 +280,6 @@ mod_symlinks() {
 
 OMZ_PLUGIN_LIST=(
   "autoupdate|https://github.com/TamCore/autoupdate-oh-my-zsh-plugins"
-  "zsh-autosuggestions|https://github.com/zsh-users/zsh-autosuggestions"
-  "zsh-completions|https://github.com/zsh-users/zsh-completions"
-  "zsh-better-npm-completion|https://github.com/lukechilds/zsh-better-npm-completion"
 )
 
 mod_omz() {
@@ -497,31 +496,6 @@ mod_tmux() {
 
 # ─── Module: Claude Code ─────────────────────────────────────────────────────
 
-_install_brew_pkg() {
-  local pkg="$1"
-  if command -v "$pkg" &>/dev/null; then
-    print_success "$pkg"
-  else
-    print_add "$pkg (will install via brew)"
-    if ask_apply; then
-      brew install "$pkg" && print_success "$pkg installed"
-    fi
-  fi
-}
-
-_install_brew_tap_pkg() {
-  local tap="$1"
-  local cmd="$2"
-  if command -v "$cmd" &>/dev/null; then
-    print_success "$cmd"
-  else
-    print_add "$cmd (will install via brew tap $tap)"
-    if ask_apply; then
-      brew install "$tap" && print_success "$cmd installed"
-    fi
-  fi
-}
-
 _install_uv_tool() {
   local pkg="$1"
   local cmd="${2:-$1}"
@@ -581,20 +555,9 @@ mod_claude() {
   done
 
   # --- Install dev tool prerequisites ---
+  # Brew packages live in tools/Brewfile (installed by the brewpkgs module).
+  # This block handles cross-ecosystem tools (uv / cargo / pnpm).
   print_info "Checking dev tool prerequisites..."
-
-  # Brew packages
-  if command -v brew &>/dev/null; then
-    _install_brew_pkg ast-grep
-    _install_brew_pkg shellcheck
-    _install_brew_pkg shfmt
-    _install_brew_pkg actionlint
-    _install_brew_pkg zizmor
-    _install_brew_tap_pkg macos-trash trash
-    _install_brew_tap_pkg timvw/tap/wt wt
-  else
-    print_warn "Homebrew not available — skipping brew packages"
-  fi
 
   # Python tools (via uv)
   if command -v uv &>/dev/null; then
@@ -610,6 +573,7 @@ mod_claude() {
     _install_cargo_crate prek
     _install_cargo_crate cargo-deny
     _install_cargo_crate cargo-careful
+    _install_cargo_crate cargo-mutants
   else
     print_warn "cargo not available — skipping Rust tools"
   fi

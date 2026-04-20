@@ -1,6 +1,5 @@
 # ─── Shell ───────────────────────────────────────────────────────────────────
 brew "bash"                        # macOS ships bash 3.2; this gives 5.x
-brew "bash-completion@2"
 brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "zsh-history-substring-search"
@@ -23,7 +22,6 @@ brew "gh"
 brew "coreutils"
 brew "findutils"
 brew "gnu-sed"
-brew "grep"
 brew "moreutils"                   # sponge, ts, etc.
 
 # ─── Terminal multiplexer ────────────────────────────────────────────────────
@@ -41,9 +39,18 @@ brew "htop"
 brew "tree"
 brew "pv"                          # pipe viewer
 brew "entr"                        # run cmd on file change
-brew "tldr"
+brew "tlrc"                        # tldr client (tldr formula was deprecated 2025-10-24)
 brew "mtr"                         # network diagnostics
 brew "nmap"
+
+# ─── Dev tooling (shell/CI linters, AST search, file utils) ──────────────────
+brew "ast-grep"                    # AST-based code search
+brew "shellcheck"                  # shell linter
+brew "shfmt"                       # shell formatter
+brew "actionlint"                  # GitHub Actions linter
+brew "zizmor"                      # Actions security audit
+brew "macos-trash"                 # `trash` — safer rm
+brew "timvw/tap/wt"                # git worktree wrapper
 
 # ─── GPG ─────────────────────────────────────────────────────────────────────
 brew "gnupg"

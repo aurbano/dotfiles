@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 # Two-line statusline with visual context progress bar
 #
 # Line 1: Model, folder, branch
@@ -39,16 +40,18 @@ IFS=$'\t' read -r current_dir model_name cost lines_added lines_removed duration
             else 0 end
         ) catch 0)
     ] | @tsv'
-)
+) || true
 
-# Bash-level fallback: if jq crashed entirely, extract fields individually
+# Bash-level fallback: if jq crashed entirely, extract fields individually.
+# Each jq call is guarded with `|| true` so malformed input degrades to defaults
+# rather than aborting the whole render under strict mode.
 if [ -z "$current_dir" ] && [ -z "$model_name" ]; then
-    current_dir=$(echo "$stdin_data" | jq -r '.workspace.current_dir // .cwd // "unknown"' 2>/dev/null)
-    model_name=$(echo "$stdin_data" | jq -r '.model.display_name // "Unknown"' 2>/dev/null)
-    cost=$(echo "$stdin_data" | jq -r '(.cost.total_cost_usd // 0)' 2>/dev/null)
-    lines_added=$(echo "$stdin_data" | jq -r '(.cost.total_lines_added // 0)' 2>/dev/null)
-    lines_removed=$(echo "$stdin_data" | jq -r '(.cost.total_lines_removed // 0)' 2>/dev/null)
-    duration_ms=$(echo "$stdin_data" | jq -r '(.cost.total_duration_ms // 0)' 2>/dev/null)
+    current_dir=$(echo "$stdin_data" | jq -r '.workspace.current_dir // .cwd // "unknown"' 2>/dev/null || true)
+    model_name=$(echo "$stdin_data" | jq -r '.model.display_name // "Unknown"' 2>/dev/null || true)
+    cost=$(echo "$stdin_data" | jq -r '(.cost.total_cost_usd // 0)' 2>/dev/null || true)
+    lines_added=$(echo "$stdin_data" | jq -r '(.cost.total_lines_added // 0)' 2>/dev/null || true)
+    lines_removed=$(echo "$stdin_data" | jq -r '(.cost.total_lines_removed // 0)' 2>/dev/null || true)
+    duration_ms=$(echo "$stdin_data" | jq -r '(.cost.total_duration_ms // 0)' 2>/dev/null || true)
     ctx_used=""
     cache_pct="0"
     : "${current_dir:=unknown}"
@@ -60,9 +63,11 @@ if [ -z "$current_dir" ] && [ -z "$model_name" ]; then
 fi
 
 # Git info
+git_branch=""
+git_root=""
 if cd "$current_dir" 2>/dev/null; then
-    git_branch=$(git -c core.useBuiltinFSMonitor=false branch --show-current 2>/dev/null)
-    git_root=$(git -c core.useBuiltinFSMonitor=false rev-parse --show-toplevel 2>/dev/null)
+    git_branch=$(git -c core.useBuiltinFSMonitor=false branch --show-current 2>/dev/null || true)
+    git_root=$(git -c core.useBuiltinFSMonitor=false rev-parse --show-toplevel 2>/dev/null || true)
 fi
 
 # Build repo path display (folder name only for brevity)

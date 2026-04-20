@@ -14,51 +14,27 @@ else
 fi
 export PATH=$BREW_PREFIX/bin:$PATH
 
-# ─── Oh My Zsh ──────────────────────────────────────────────────────────────
-export ZSH=~/dotfiles/.oh-my-zsh
+# ─── fpath (before compinit) ────────────────────────────────────────────────
+# Pure prompt + brew-shipped completions (zsh-completions adds ~200 tools).
+fpath=(
+  ~/.zsh/completions
+  $HOME/.docker/completions
+  ~/.zfunc
+  $BREW_PREFIX/share/zsh-completions
+  $BREW_PREFIX/share/zsh/site-functions
+  $fpath
+)
 
-# Pure prompt
-fpath+=$BREW_PREFIX/share/zsh/site-functions
+# ─── Prompt ──────────────────────────────────────────────────────────────────
 autoload -U promptinit; promptinit
 
-# Completions fpath (before compinit)
-fpath=(~/.zsh/completions $HOME/.docker/completions ~/.zfunc $fpath)
-
-ZSH_THEME="" # Empty for pure prompt
-COMPLETION_WAITING_DOTS="true"
-
-# Source syntax-highlighting & substring-search from brew (faster than OMZ clones)
+# ─── Syntax highlighting + history substring search ─────────────────────────
+# Order matters: syntax-highlighting first, then history-substring-search
+# (per h-s-s README). Both come from brew, not a framework.
 [[ -f $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
   source $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 [[ -f $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && \
   source $BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-plugins=(
-  autoupdate
-  aws
-  colored-man-pages
-  colorize
-  common-aliases
-  dotenv
-  git
-  gitfast
-  macos
-  ssh-agent
-  sudo
-  yarn
-)
-
-# Defer compinit — OMZ calls it without -C (212ms). We stub it out here
-# and call it once ourselves after all plugins/fpath are configured.
-skip_global_compinit=1
-ZSH_DISABLE_COMPFIX=true
-
-# Stub compinit + compdef so OMZ's call is a no-op. Buffer compdef calls.
-typeset -ga _compdef_buffer=()
-compinit() { : }
-compdef() { _compdef_buffer+=("${(j: :)@}") }
-source $ZSH/oh-my-zsh.sh
-unfunction compinit compdef 2>/dev/null
 
 # ─── User config ────────────────────────────────────────────────────────────
 source ~/dotfiles/configs/.functions
@@ -70,15 +46,13 @@ for _zsh_conf in ~/dotfiles/zsh/*.zsh; do
 done
 unset _zsh_conf
 
-# ─── Prompt ──────────────────────────────────────────────────────────────────
+# ─── Activate prompt ────────────────────────────────────────────────────────
 prompt pure
 
 # ─── Machine-specific config (last) ─────────────────────────────────────────
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
-# bun completions
-[ -s "/Users/alex/.bun/_bun" ] && source "/Users/alex/.bun/_bun"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+[[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"

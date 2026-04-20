@@ -49,7 +49,6 @@ Usage: ./update.sh [--dry-run] [--module NAME]
 Modules (run in order by default):
   brew         brew update, upgrade, cleanup, bundle
   nvim         lazy.nvim sync + treesitter parser updates
-  omz          git pull Oh My Zsh core + each custom plugin
   tmux         TPM update_plugins all
   toolchains   rustup, uv tools, pnpm globals, fnm LTS
 EOF
@@ -90,48 +89,6 @@ mod_nvim() {
 
   run nvim --headless "+Lazy! sync" +qa
   run nvim --headless "+TSUpdateSync" +qa
-}
-
-# ─── Module: Oh My Zsh + custom plugins ─────────────────────────────────────
-_pull_repo() {
-  local dir="$1"
-  local label="$2"
-  if [[ ! -d "$dir/.git" ]]; then
-    print_skip "$label (not a git repo)"
-    return
-  fi
-  if $DRY_RUN; then
-    print_info "\$ git -C $dir pull --ff-only --quiet"
-    return
-  fi
-  if git -C "$dir" pull --ff-only --quiet; then
-    print_success "$label"
-  else
-    print_error "$label (pull failed)"
-    return 1
-  fi
-}
-
-mod_omz() {
-  print_header "Oh My Zsh + custom plugins"
-
-  local omz_dir="$DOTFILES_DIR/.oh-my-zsh"
-  if [[ ! -d "$omz_dir" ]]; then
-    print_warn "Oh My Zsh not installed at $omz_dir — skipping"
-    return
-  fi
-
-  _pull_repo "$omz_dir" "oh-my-zsh"
-
-  local plugin_dir="$omz_dir/custom/plugins"
-  if [[ ! -d "$plugin_dir" ]]; then
-    return
-  fi
-
-  for plugin in "$plugin_dir"/*/; do
-    [[ -d "$plugin" ]] || continue
-    _pull_repo "${plugin%/}" "$(basename "$plugin")"
-  done
 }
 
 # ─── Module: Tmux plugins (TPM) ─────────────────────────────────────────────
@@ -178,14 +135,13 @@ mod_toolchains() {
 }
 
 # ─── Runner ─────────────────────────────────────────────────────────────────
-ALL_MODULES=(brew nvim omz tmux toolchains)
+ALL_MODULES=(brew nvim tmux toolchains)
 
 run_module() {
   local name="$1"
   case "$name" in
     brew)       mod_brew ;;
     nvim)       mod_nvim ;;
-    omz)        mod_omz ;;
     tmux)       mod_tmux ;;
     toolchains) mod_toolchains ;;
     *) print_error "Unknown module: $name"; exit 1 ;;

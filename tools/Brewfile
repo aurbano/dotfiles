@@ -3,6 +3,7 @@ brew "bash"                        # macOS ships bash 3.2; this gives 5.x
 brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "zsh-history-substring-search"
+brew "zsh-completions"             # extra completions (~200 tools)
 brew "pure"
 
 # ─── Modern CLI replacements ─────────────────────────────────────────────────
@@ -35,6 +36,7 @@ brew "yq"                          # jq for YAML
 brew "xh"                          # modern curl/httpie alternative
 brew "llm"                         # LLM CLI (Simon Willison)
 brew "neovim"
+brew "tree-sitter-cli"             # required by nvim-treesitter for :TSInstall
 brew "htop"
 brew "tree"
 brew "pv"                          # pipe viewer

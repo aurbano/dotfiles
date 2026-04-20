@@ -15,7 +15,3 @@ if command -v terraform &>/dev/null; then
 fi
 
 zstyle ':completion:*' menu select
-
-# Replay compdef calls that were buffered during OMZ plugin loading
-for _def in "${_compdef_buffer[@]}"; do compdef $_def 2>/dev/null; done
-unset _compdef_buffer _def

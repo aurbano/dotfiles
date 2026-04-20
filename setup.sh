@@ -73,7 +73,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: ./setup.sh [--yes] [--dry-run] [--module NAME] [--reverse] [--status]"
       echo ""
-      echo "Modules: xcode, homebrew, brewpkgs, symlinks, omz, shell-tools, nvim, toolchains, llm, tmux, claude, macos"
+      echo "Modules: xcode, homebrew, brewpkgs, symlinks, shell-tools, nvim, toolchains, llm, tmux, claude, macos"
       exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -274,46 +274,6 @@ mod_symlinks() {
   else
     print_success "~/.zshrc.local exists"
   fi
-}
-
-# ─── Module: Oh My Zsh + plugins ────────────────────────────────────────────
-
-OMZ_PLUGIN_LIST=(
-  "autoupdate|https://github.com/TamCore/autoupdate-oh-my-zsh-plugins"
-)
-
-mod_omz() {
-  print_header "Oh My Zsh + Plugins"
-
-  local omz_dir="$DOTFILES_DIR/.oh-my-zsh"
-  if [[ -d "$omz_dir" ]]; then
-    print_success "Oh My Zsh installed"
-  else
-    print_add "Oh My Zsh not found (will clone)"
-    if ask_apply; then
-      git clone https://github.com/ohmyzsh/ohmyzsh.git "$omz_dir"
-      print_success "Oh My Zsh cloned"
-    fi
-  fi
-
-  local custom_dir="${ZSH_CUSTOM:-$omz_dir/custom}"
-  local plugin_dir="$custom_dir/plugins"
-
-  for entry in "${OMZ_PLUGIN_LIST[@]}"; do
-    local plugin="${entry%%|*}"
-    local url="${entry#*|}"
-    local dest="$plugin_dir/$plugin"
-    if [[ -d "$dest" ]]; then
-      print_success "$plugin"
-    else
-      print_add "$plugin (will clone)"
-      if ask_apply; then
-        git clone "$url" "$dest"
-        print_success "$plugin cloned"
-      fi
-    fi
-  done
-
 }
 
 # ─── Module: Shell tools (pure, pygments, git-open) ─────────────────────────
@@ -677,35 +637,28 @@ show_status() {
     local target="$HOME/$item"
     local source="$DOTFILES_DIR/configs/$item"
     if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
-      ((ok++))
+      ((++ok))
     elif [[ -e "$target" ]]; then
-      ((wrong++))
+      ((++wrong))
     else
-      ((missing++))
+      ((++missing))
     fi
   done
   for item in "${SYMLINK_DIRS[@]}"; do
     local target="$HOME/$item"
     local source="$DOTFILES_DIR/$item"
     if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
-      ((ok++))
+      ((++ok))
     elif [[ -e "$target" ]]; then
-      ((wrong++))
+      ((++wrong))
     else
-      ((missing++))
+      ((++missing))
     fi
   done
   if [[ $missing -eq 0 && $wrong -eq 0 ]]; then
     print_success "Symlinks ($ok OK)"
   else
     print_warn "Symlinks ($ok OK, $missing missing, $wrong wrong)"
-  fi
-
-  # Oh My Zsh
-  if [[ -d "$DOTFILES_DIR/.oh-my-zsh" ]]; then
-    print_success "Oh My Zsh"
-  else
-    print_warn "Oh My Zsh not installed"
   fi
 
   # Neovim
@@ -821,7 +774,7 @@ except Exception:
 
 # ─── Run modules ────────────────────────────────────────────────────────────
 
-ALL_MODULES=(xcode homebrew brewpkgs symlinks omz shell-tools nvim toolchains llm tmux claude macos)
+ALL_MODULES=(xcode homebrew brewpkgs symlinks shell-tools nvim toolchains llm tmux claude macos)
 
 run_module() {
   case "$1" in
@@ -829,7 +782,6 @@ run_module() {
     homebrew)     mod_homebrew ;;
     brewpkgs|brew) mod_brewpkgs ;;
     symlinks)     mod_symlinks ;;
-    omz)          mod_omz ;;
     shell-tools)  mod_shell_tools ;;
     nvim|vim)     mod_vim ;;
     toolchains)   mod_toolchains ;;

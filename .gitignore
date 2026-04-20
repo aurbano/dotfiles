@@ -5,10 +5,6 @@
 # Claude Code — machine-local permissions
 .claude/settings.local.json
 
-# Oh My Zsh (cloned by setup.sh, not tracked)
-.oh-my-zsh
-
-
 # Folder view configuration files
 .DS_Store
 Desktop.ini
@@ -31,3 +27,6 @@ __pycache__/
 # Local env
 .env
 .env.local
+
+# Stray logs (e.g. headless nvim)
+*.log

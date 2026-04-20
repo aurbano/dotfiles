@@ -567,13 +567,18 @@ mod_claude() {
   # --- Symlink config files into ~/.claude/ ---
   mkdir -p "$HOME/.claude" "$HOME/.claude/agents"
 
-  local claude_files=(CLAUDE.md settings.json statusline.sh enforce-package-manager.sh)
-  for item in "${claude_files[@]}"; do
-    _apply_symlink "$DOTFILES_DIR/claude/$item" "$HOME/.claude/$item" "~/.claude/$item"
+  for item in "$DOTFILES_DIR/claude/"*; do
+    [[ -d "$item" ]] && continue
+    local name
+    name="$(basename "$item")"
+    _apply_symlink "$item" "$HOME/.claude/$name" "~/.claude/$name"
   done
-  _apply_symlink "$DOTFILES_DIR/claude/agents/principal-code-reviewer.md" \
-    "$HOME/.claude/agents/principal-code-reviewer.md" \
-    "~/.claude/agents/principal-code-reviewer.md"
+  for item in "$DOTFILES_DIR/claude/agents/"*; do
+    [[ -d "$item" ]] && continue
+    local name
+    name="$(basename "$item")"
+    _apply_symlink "$item" "$HOME/.claude/agents/$name" "~/.claude/agents/$name"
+  done
 
   # --- Install dev tool prerequisites ---
   print_info "Checking dev tool prerequisites..."

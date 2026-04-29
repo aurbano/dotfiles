@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Single-line statusline: model, folder, branch, context bar, cost, duration, cache.
+# Single-line statusline: folder, branch, context bar, cost, duration, cache, model.
 #
 # Context % uses Claude Code's pre-calculated remaining_percentage,
 # which accounts for compaction reserves. 100% = compaction fires.
@@ -133,8 +133,7 @@ SEP='\033[2m│\033[0m'
 # Get short model name (e.g., "Opus" instead of "Claude 3.5 Opus")
 short_model=$(echo "$model_name" | sed -E 's/Claude [0-9.]+ //; s/^Claude //')
 
-line=$(printf '\033[37m[%s]\033[0m' "$short_model")
-line="$line $(printf '%b \033[94m📁 %s\033[0m' "$SEP" "$folder_name")"
+line=$(printf '\033[94m📁 %s\033[0m' "$folder_name")
 if [ -n "$git_branch" ]; then
     line="$line $(printf '%b \033[96m🌿 %s\033[0m' "$SEP" "$git_branch")"
 fi
@@ -151,5 +150,6 @@ fi
 if [ "$cache_pct" -gt 0 ] 2>/dev/null; then
     line="$line $(printf '%b \033[2m↻%s%%\033[0m' "$SEP" "$cache_pct")"
 fi
+line="$line $(printf '%b \033[37m[%s]\033[0m' "$SEP" "$short_model")"
 
 printf '%b' "$line"

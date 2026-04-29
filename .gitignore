@@ -4,6 +4,7 @@
 
 # Claude Code — machine-local permissions
 .claude/settings.local.json
+.claude/statusline.sh
 
 # Folder view configuration files
 .DS_Store

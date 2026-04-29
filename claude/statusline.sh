@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Two-line statusline with visual context progress bar
-#
-# Line 1: Model, folder, branch
-# Line 2: Progress bar, context %, cost, duration
+# Single-line statusline: model, folder, branch, context bar, cost, duration, cache.
 #
 # Context % uses Claude Code's pre-calculated remaining_percentage,
 # which accounts for compaction reserves. 100% = compaction fires.
@@ -136,35 +133,23 @@ SEP='\033[2m│\033[0m'
 # Get short model name (e.g., "Opus" instead of "Claude 3.5 Opus")
 short_model=$(echo "$model_name" | sed -E 's/Claude [0-9.]+ //; s/^Claude //')
 
-# LINE 1: [Model] folder | branch
-line1=$(printf '\033[37m[%s]\033[0m' "$short_model")
-line1="$line1 $(printf '\033[94m📁 %s\033[0m' "$folder_name")"
+line=$(printf '\033[37m[%s]\033[0m' "$short_model")
+line="$line $(printf '%b \033[94m📁 %s\033[0m' "$SEP" "$folder_name")"
 if [ -n "$git_branch" ]; then
-    line1="$line1 $(printf '%b \033[96m🌿 %s\033[0m' "$SEP" "$git_branch")"
+    line="$line $(printf '%b \033[96m🌿 %s\033[0m' "$SEP" "$git_branch")"
 fi
-
-# LINE 2: Progress bar | Context % | cost | duration
-line2=""
 if [ -n "$progress_bar" ]; then
-    line2=$(printf '%b' "$progress_bar")
-fi
-if [ -n "$ctx_pct" ]; then
-    if [ -n "$line2" ]; then
-        line2="$line2 $(printf '\033[37m%s\033[0m' "$ctx_pct")"
-    else
-        line2=$(printf '\033[37m%s\033[0m' "$ctx_pct")
+    line="$line $(printf '%b %b' "$SEP" "$progress_bar")"
+    if [ -n "$ctx_pct" ]; then
+        line="$line $(printf '\033[37m%s\033[0m' "$ctx_pct")"
     fi
 fi
-if [ -n "$line2" ]; then
-    line2="$line2 $(printf '%b \033[33m$%s\033[0m' "$SEP" "$cost")"
-else
-    line2=$(printf '\033[33m$%s\033[0m' "$cost")
-fi
+line="$line $(printf '%b \033[33m$%s\033[0m' "$SEP" "$cost")"
 if [ -n "$session_time" ]; then
-    line2="$line2 $(printf '%b \033[36m⏱ %s\033[0m' "$SEP" "$session_time")"
+    line="$line $(printf '%b \033[36m⏱ %s\033[0m' "$SEP" "$session_time")"
 fi
 if [ "$cache_pct" -gt 0 ] 2>/dev/null; then
-    line2="$line2 $(printf ' \033[2m↻%s%%\033[0m' "$cache_pct")"
+    line="$line $(printf '%b \033[2m↻%s%%\033[0m' "$SEP" "$cache_pct")"
 fi
 
-printf '%b\n\n%b' "$line1" "$line2"
+printf '%b' "$line"

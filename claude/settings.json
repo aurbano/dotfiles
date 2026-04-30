@@ -30,7 +30,24 @@
   },
   "sandbox": {
     "enabled": true,
-    "autoAllowBashIfSandboxed": true
+    "autoAllowBashIfSandboxed": true,
+    "excludedCommands": [
+      "bay *",
+      "npm *",
+      "npx *",
+      "pnpm *",
+      "pnpx *",
+      "node *",
+      "gh *",
+      "aws *",
+      "AWS_PROFILE=* aws *",
+      "kubectl *",
+      "git *",
+      "trash *"
+    ],
+    "filesystem": {
+      "allowWrite": ["~/.1password"]
+    }
   },
   "alwaysThinkingEnabled": true,
   "skipDangerousModePermissionPrompt": true,

@@ -56,3 +56,5 @@ prompt pure
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
+# CF CLI completions
+[[ -f "/Users/alex/.config/cf/completions/_cf.zsh" ]] && source "/Users/alex/.config/cf/completions/_cf.zsh"

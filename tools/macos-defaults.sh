@@ -1,14 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ~/.osx — macOS defaults
-# Run: sh .osx
-
-# Ask for the administrator password upfront
-sudo -v
-
-# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+# macOS defaults. Run: bash tools/macos-defaults.sh (no sudo needed)
 
 ###############################################################################
 # General UI/UX                                                               #
@@ -28,11 +21,8 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-# Disable the "Are you sure you want to open this application?" dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
 # Disable Resume system-wide
-defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
+defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
 
 # Disable smart quotes as they're annoying when typing code
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
@@ -40,21 +30,19 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable smart dashes as they're annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-# Check for software updates daily, not just once per week
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-
 ###############################################################################
 # Trackpad, keyboard, Bluetooth accessories, and input                        #
 ###############################################################################
 
-# Trackpad: enable tap to click for this user and for the login screen
+# Trackpad: enable tap to click (built-in and Bluetooth) for this user and the login screen
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# Enable full keyboard access for all controls
-# (e.g. enable Tab in modal dialogs)
-defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+# Enable keyboard navigation for all controls (e.g. Tab in modal dialogs).
+# macOS 13+ only honours 2; the old value 3 is ignored.
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 2
 
 # Disable press-and-hold for keys in favor of key repeat
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
@@ -86,7 +74,7 @@ defaults write com.apple.finder CreateDesktop -bool false
 ###############################################################################
 
 # Finder: show hidden files by default
-defaults write com.apple.Finder AppleShowAllFiles -bool true
+defaults write com.apple.finder AppleShowAllFiles -bool true
 
 # Finder: show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -195,9 +183,6 @@ defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
 # Disable the all too sensitive backswipe on Magic Mouse
 defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
 
-# Use the system-native print preview dialog
-defaults write com.google.Chrome DisablePrintPreview -bool true
-
 ###############################################################################
 # Mail                                                                        #
 ###############################################################################
@@ -213,8 +198,10 @@ defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # Kill affected applications                                                  #
 ###############################################################################
 
-for app in "Activity Monitor" "cfprefsd" "Dock" "Finder" "Google Chrome" \
-	"Mail" "SystemUIServer" "Terminal"; do
-	killall "${app}" > /dev/null 2>&1
+# Only restart what the settings above need; leave Chrome, Mail and Terminal
+# running (their settings apply on next launch). killall fails when the app
+# isn't running, which must not abort the script under `set -e`.
+for app in "Activity Monitor" "cfprefsd" "Dock" "Finder" "SystemUIServer"; do
+	killall "${app}" > /dev/null 2>&1 || true
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."

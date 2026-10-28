@@ -21,7 +21,6 @@ brew "gh"
 
 # ─── GNU core utils ──────────────────────────────────────────────────────────
 brew "coreutils"
-brew "findutils"
 brew "gnu-sed"
 brew "moreutils"                   # sponge, ts, etc.
 
@@ -29,7 +28,6 @@ brew "moreutils"                   # sponge, ts, etc.
 brew "tmux"
 
 # ─── Essential tools ─────────────────────────────────────────────────────────
-brew "curl"
 brew "wget"
 brew "jq"
 brew "yq"                          # jq for YAML
@@ -54,7 +52,7 @@ brew "zizmor"                      # Actions security audit
 brew "macos-trash"                 # `trash` — safer rm
 brew "timvw/tap/wt"                # git worktree wrapper
 
-# ─── GPG ─────────────────────────────────────────────────────────────────────
+# ─── GPG (git signing uses SSH via 1Password; gpg is for encryption) ─────────
 brew "gnupg"
 brew "pinentry-mac"
 
@@ -63,12 +61,12 @@ brew "fnm"                         # fast node manager
 
 # ─── Python ──────────────────────────────────────────────────────────────────
 brew "uv"
-brew "pygments"                    # colorize zsh plugin
 
 # ─── Media ───────────────────────────────────────────────────────────────────
 brew "ffmpeg"
 
 # ─── Kubernetes ───────────────────────────────────────────────────────────────
+brew "kubernetes-cli"              # kubectl
 brew "kubie"                       # k8s context/namespace switcher (per-shell isolation)
 
 # ─── Fonts ───────────────────────────────────────────────────────────────────

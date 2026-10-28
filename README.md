@@ -18,17 +18,18 @@ The setup script is interactive — it checks what's missing and asks before mak
 ./update.sh
 ```
 
-Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + treesitter), Oh My Zsh plugins, TPM, and language toolchains (rustup, uv tools, pnpm globals, fnm LTS). Non-interactive by default; use `--dry-run` to preview or `--module <name>` for a single step.
+Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + treesitter), TPM, and language toolchains (rustup, uv tools, pnpm globals, fnm LTS). Non-interactive by default; use `--dry-run` to preview or `--module <name>` for a single step.
 
 ## What's included
 
 | File | Purpose |
 |------|---------|
-| `configs/.zshrc` | Shell config — Oh My Zsh, pure prompt, deferred compinit |
-| `zsh/` | Modular shell config (history, node, python, tools, gcloud) |
-| `configs/.aliases` | Aliases with modern tool replacements (bat, eza, fd, rg, delta) |
-| `configs/.functions` | Shell functions (extract, port, serve, whois, …) |
-| `configs/.gitconfig` | Git config — delta pager, histogram diffs, rebase defaults |
+| `configs/.zshrc` | Shell config — no framework: pure prompt, brew-shipped plugins, cached tool init (regenerated on upgrade) |
+| `zsh/` | Modular shell config (completions, history, git, node, tools, gcloud, kubernetes, macOS) |
+| `configs/.aliases` | Aliases; standard tool names (`cat`, `ls`, `grep`, `find`, `diff`) stay the real tools |
+| `configs/.functions` | Shell functions (extract, gifify, port, serve, t, …) |
+| `configs/.gitconfig` | Git config — delta pager, histogram diffs, zdiff3, rerere, rebase defaults |
+| `configs/gitignore_global`, `configs/gitattributes_global` | Global git ignores and attributes |
 | `nvim/` | Neovim config — lazy.nvim, treesitter, telescope, catppuccin |
 | `tools/Brewfile` | All Homebrew dependencies |
 | `configs/.curlrc` | Sensible curl defaults |
@@ -118,7 +119,10 @@ After first install, open tmux and press `prefix + I` to install plugins (TPM).
 
 ## Machine-local overrides
 
-Put anything machine-specific in `~/.zshrc.local` — it's sourced last and not tracked.
+`~/.zshrc`, `~/.gitconfig` and `~/.curlrc` are local, untracked stubs that load the shared files in `configs/`. Installers and `git config --global` edit those stubs, so their changes never land in this repo. Put machine-specific settings in the stub itself, or in:
+
+- `~/.zshrc.local` — sourced near the end of the shared `.zshrc`. Anything that must run before the shared config (extra `fpath` entries for completions) goes above the `source` line in `~/.zshrc`.
+- `~/.claude/CLAUDE.local.md` — imported by the shared `claude/CLAUDE.md`.
 
 Git credentials go in `~/.gitconfig.local`:
 

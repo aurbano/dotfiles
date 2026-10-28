@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2088  # "~/..." strings are display labels, never paths
 set -euo pipefail
 
 # ─── Dotfiles setup ─────────────────────────────────────────────────────────
@@ -56,7 +57,7 @@ ask_for_confirmation() {
 ask_apply() {
   if $AUTO_YES; then return 0; fi
   if $DRY_RUN; then return 1; fi
-  printf "${YELLOW}  [?] Apply? (y)es / (n)o: ${NC}"
+  printf '%b  [?] Apply? (y)es / (n)o: %b' "$YELLOW" "$NC"
   read -r -n 1
   printf "\n"
   answer_is_yes
@@ -130,6 +131,7 @@ mod_brewpkgs() {
   local tmp_brews tmp_casks
   tmp_brews="$(mktemp)"
   tmp_casks="$(mktemp)"
+  # shellcheck disable=SC2064  # expand now: the locals are gone when RETURN fires
   trap "rm -f '$tmp_brews' '$tmp_casks'" RETURN
 
   brew list --formula -1 2>/dev/null | sort > "$tmp_brews"
@@ -176,23 +178,69 @@ mod_brewpkgs() {
   fi
 }
 
+# Machine-local packages (work tools etc.), kept out of the public Brewfile.
+mod_brewpkgs_local() {
+  local local_brewfile="$HOME/.Brewfile.local"
+  [[ -f "$local_brewfile" ]] || return 0
+  print_info "Installing ~/.Brewfile.local"
+  if ask_apply; then
+    brew bundle --file="$local_brewfile"
+  fi
+}
+
 # ─── Module: Symlinks ────────────────────────────────────────────────────────
 
 # Explicit symlink map
 declare -a SYMLINK_FILES=(
   .aliases
-  .curlrc
-  .dircolors
   .functions
-  .gitattributes
+)
+
+# Files tools edit in place (installers, `git config --global`) get a local,
+# untracked stub that loads the shared config, so those edits stay off the repo.
+declare -a STUB_FILES=(
+  .curlrc
   .gitconfig
   .zshrc
 )
-declare -a SYMLINK_DIRS=(
-  bin
-  .gitignore
-)
 
+_stub_line() {
+  local source_path="$1"
+  case "$(basename "$source_path")" in
+    .zshrc) printf 'source "%s"\n' "$source_path" ;;
+    .gitconfig) printf '[include]\n\tpath = %s\n' "$source_path" ;;
+    .curlrc) printf 'config = "%s"\n' "$source_path" ;;
+  esac
+}
+
+_apply_stub() {
+  local source_path="$1"
+  local target_path="$2"
+  local label="$3"
+
+  if [[ -f "$target_path" && ! -L "$target_path" ]] && grep -qF "$source_path" "$target_path"; then
+    print_success "$label loads $source_path"
+    return
+  fi
+
+  if [[ -L "$target_path" ]]; then
+    print_warn "$label is a symlink; tools that edit it write into the dotfiles repo"
+  elif [[ -e "$target_path" ]]; then
+    print_warn "$label exists but does not load $source_path (left as is)"
+    return
+  else
+    print_add "$label (will create local stub)"
+  fi
+
+  if ask_apply; then
+    rm -f "$target_path"
+    {
+      printf '# Machine-local, not tracked. Shared config:\n'
+      _stub_line "$source_path"
+    } > "$target_path"
+    print_success "$label -> local stub loading $source_path"
+  fi
+}
 # Symlinks where the target is ~/.config/<name> instead of ~/<name>
 declare -a CONFIG_SYMLINK_DIRS=(
   nvim
@@ -250,8 +298,8 @@ mod_symlinks() {
   for item in "${SYMLINK_FILES[@]}"; do
     _apply_symlink "$DOTFILES_DIR/configs/$item" "$HOME/$item" "~/$item"
   done
-  for item in "${SYMLINK_DIRS[@]}"; do
-    _apply_symlink "$DOTFILES_DIR/$item" "$HOME/$item" "~/$item"
+  for item in "${STUB_FILES[@]}"; do
+    _apply_stub "$DOTFILES_DIR/configs/$item" "$HOME/$item" "~/$item"
   done
 
   # ~/.config/<name> symlinks
@@ -276,7 +324,7 @@ mod_symlinks() {
   fi
 }
 
-# ─── Module: Shell tools (pure, pygments, git-open) ─────────────────────────
+# ─── Module: Shell tools (pure) ──────────────────────────────────────────────
 mod_shell_tools() {
   print_header "Shell Tools"
 
@@ -291,27 +339,6 @@ mod_shell_tools() {
     print_add "Pure prompt not found"
     if ask_apply; then
       brew install pure || print_error "Could not install pure prompt"
-    fi
-  fi
-
-  # Pygments (for colorize plugin)
-  if command -v pygmentize &>/dev/null; then
-    print_success "Pygments"
-  else
-    print_add "Pygments not found (used by colorize plugin)"
-    if ask_apply; then
-      brew install pygments
-      print_success "Pygments installed"
-    fi
-  fi
-
-  # git-open
-  if command -v git-open &>/dev/null; then
-    print_success "git-open"
-  else
-    print_add "git-open not found"
-    if ask_apply; then
-      npm install --global git-open 2>/dev/null || print_warn "Could not install git-open (npm not available)"
     fi
   fi
 }
@@ -367,20 +394,6 @@ mod_toolchains() {
       print_success "fnm installed"
     else
       print_skip "fnm skipped"
-    fi
-  fi
-
-  # pyenv
-  if command -v pyenv &>/dev/null; then
-    print_success "pyenv ($(pyenv --version 2>&1 | awk '{print $2}'))"
-  else
-    print_add "pyenv not found"
-    ask_for_confirmation "Install pyenv?"
-    if answer_is_yes && ! $DRY_RUN; then
-      brew install pyenv
-      print_success "pyenv installed"
-    else
-      print_skip "pyenv skipped"
     fi
   fi
 
@@ -505,8 +518,20 @@ mod_claude() {
     [[ -d "$item" ]] && continue
     local name
     name="$(basename "$item")"
+    # Claude Code rewrites settings.json in place (and adds machine-specific
+    # plugins and hooks), so it is seeded once rather than symlinked.
+    [[ "$name" == settings.json ]] && continue
     _apply_symlink "$item" "$HOME/.claude/$name" "~/.claude/$name"
   done
+  if [[ -e "$HOME/.claude/settings.json" ]]; then
+    print_success "~/.claude/settings.json exists (seeded from claude/settings.json, not linked)"
+  else
+    print_add "~/.claude/settings.json (will seed from claude/settings.json)"
+    if ask_apply; then
+      cp "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+      print_success "~/.claude/settings.json seeded"
+    fi
+  fi
   for item in "$DOTFILES_DIR/claude/agents/"*; do
     [[ -d "$item" ]] && continue
     local name
@@ -524,13 +549,13 @@ mod_claude() {
     _install_uv_tool ruff
     _install_uv_tool ty
     _install_uv_tool pip-audit
+    _install_uv_tool prek
   else
     print_warn "uv not available — skipping Python tools"
   fi
 
   # Cargo crates
   if command -v cargo &>/dev/null; then
-    _install_cargo_crate prek
     _install_cargo_crate cargo-deny
     _install_cargo_crate cargo-careful
     _install_cargo_crate cargo-mutants
@@ -555,7 +580,7 @@ mod_macos() {
     return
   fi
 
-  print_info "Will run tools/macos-defaults.sh to set macOS defaults (requires sudo)"
+  print_info "Will run tools/macos-defaults.sh to set macOS defaults"
   print_info "Categories: General UI, Keyboard, Screen, Finder, Dock, Terminal, Activity Monitor, TextEdit, Chrome, Mail"
 
   ask_for_confirmation "Apply macOS defaults?"
@@ -577,14 +602,17 @@ mod_reverse() {
   fi
 
   local brewfile="$DOTFILES_DIR/tools/Brewfile"
+  local local_brewfile="$HOME/.Brewfile.local"
+  touch "$local_brewfile"
 
-  # Snapshot: Brewfile wants vs installed leaves
+  # Snapshot: wanted (public + local Brewfile) vs installed leaves
   local tmp_wanted tmp_installed
   tmp_wanted="$(mktemp)"
   tmp_installed="$(mktemp)"
+  # shellcheck disable=SC2064  # expand now: the locals are gone when RETURN fires
   trap "rm -f '$tmp_wanted' '$tmp_installed'" RETURN
 
-  sed -n 's/^brew "\([^"]*\)".*/\1/p' "$brewfile" | sort > "$tmp_wanted"
+  sed -n 's/^brew "\([^"]*\)".*/\1/p' "$brewfile" "$local_brewfile" | sort -u > "$tmp_wanted"
   brew leaves 2>/dev/null | sort > "$tmp_installed"
 
   # Find extras (installed but not in Brewfile)
@@ -596,19 +624,19 @@ mod_reverse() {
   if [[ ${#extras[@]} -eq 0 ]]; then
     print_success "No extra brew packages found"
   else
-    print_info "${#extras[@]} package(s) installed but not in Brewfile:"
+    print_info "${#extras[@]} package(s) installed but in neither Brewfile:"
     for pkg in "${extras[@]}"; do
       print_warn "$pkg"
     done
 
-    ask_for_confirmation "Add these to Brewfile?"
+    # Machine-local file, so work tools never land in the public Brewfile.
+    # Move anything you want everywhere into tools/Brewfile by hand.
+    ask_for_confirmation "Add these to ~/.Brewfile.local?"
     if answer_is_yes && ! $DRY_RUN; then
       for pkg in "${extras[@]}"; do
-        echo "brew \"$pkg\"" >> "$brewfile"
-        print_add "Added $pkg to Brewfile"
+        echo "brew \"$pkg\"" >> "$local_brewfile"
+        print_add "Added $pkg to ~/.Brewfile.local"
       done
-      print_info "Review changes:"
-      (cd "$DOTFILES_DIR" && git diff Brewfile)
     fi
   fi
 }
@@ -644,10 +672,10 @@ show_status() {
       ((++missing))
     fi
   done
-  for item in "${SYMLINK_DIRS[@]}"; do
+  for item in "${STUB_FILES[@]}"; do
     local target="$HOME/$item"
-    local source="$DOTFILES_DIR/$item"
-    if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+    local source="$DOTFILES_DIR/configs/$item"
+    if [[ -f "$target" && ! -L "$target" ]] && grep -qF "$source" "$target"; then
       ((++ok))
     elif [[ -e "$target" ]]; then
       ((++wrong))
@@ -669,7 +697,7 @@ show_status() {
   fi
 
   # Key tools
-  for tool in bat eza fd fzf rg delta zoxide git gh node pyenv cargo gcloud pnpm kubie; do
+  for tool in bat eza fd fzf rg delta zoxide git gh node uv cargo gcloud pnpm kubie; do
     if command -v "$tool" &>/dev/null; then
       print_success "$tool"
     else
@@ -724,7 +752,7 @@ except Exception:
     "4) Mistral     (mistral-large, plugin: llm-mistral)" \
     "5) Skip"
   echo ""
-  printf "${YELLOW}  [?] Select [1-5]: ${NC}"
+  printf '%b  [?] Select [1-5]: %b' "$YELLOW" "$NC"
   read -rn 1 choice
   printf "\n\n"
 
@@ -757,7 +785,7 @@ except Exception:
   fi
 
   # Prompt for key (hidden input)
-  printf "${YELLOW}  [?] $provider_name API key (hidden): ${NC}"
+  printf '%b  [?] %s API key (hidden): %b' "$YELLOW" "$provider_name" "$NC"
   read -rs api_key
   printf "\n"
 
@@ -780,7 +808,7 @@ run_module() {
   case "$1" in
     xcode)        mod_xcode ;;
     homebrew)     mod_homebrew ;;
-    brewpkgs|brew) mod_brewpkgs ;;
+    brewpkgs|brew) mod_brewpkgs; mod_brewpkgs_local ;;
     symlinks)     mod_symlinks ;;
     shell-tools)  mod_shell_tools ;;
     nvim|vim)     mod_vim ;;

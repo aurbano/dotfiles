@@ -76,6 +76,11 @@ mod_brew() {
   else
     print_warn "Brewfile not found at $brewfile — skipping bundle"
   fi
+
+  # Machine-local packages, kept out of the public Brewfile
+  if [[ -f "$HOME/.Brewfile.local" ]]; then
+    run brew bundle --file="$HOME/.Brewfile.local"
+  fi
 }
 
 # ─── Module: Neovim ─────────────────────────────────────────────────────────
@@ -88,7 +93,7 @@ mod_nvim() {
   fi
 
   run nvim --headless "+Lazy! sync" +qa
-  run nvim --headless "+TSUpdateSync" +qa
+  run nvim --headless "+lua require('nvim-treesitter').update():wait(300000)" +qa
 }
 
 # ─── Module: Tmux plugins (TPM) ─────────────────────────────────────────────
@@ -129,6 +134,8 @@ mod_toolchains() {
   if command -v fnm &>/dev/null; then
     run fnm install --lts
     run fnm default lts-latest
+    # corepack shims (yarn, pnpm via packageManager) live per Node version
+    run fnm exec --using=lts-latest corepack enable
   else
     print_skip "fnm not found"
   fi

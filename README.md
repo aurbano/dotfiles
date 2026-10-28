@@ -18,7 +18,7 @@ The setup script is interactive — it checks what's missing and asks before mak
 ./update.sh
 ```
 
-Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + treesitter), TPM, and language toolchains (rustup, uv tools, pnpm globals, fnm LTS). Non-interactive by default; use `--dry-run` to preview or `--module <name>` for a single step.
+Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + treesitter), TPM, and language toolchains (rustup, uv tools, pnpm globals, fnm LTS), and to back up machine-local files when a private `~/dotfiles-private` repo with a `sync.sh` exists. Non-interactive by default; use `--dry-run` to preview or `--module <name>` for a single step.
 
 ## What's included
 

@@ -51,6 +51,7 @@ Modules (run in order by default):
   nvim         lazy.nvim sync + treesitter parser updates
   tmux         TPM update_plugins all
   toolchains   rustup, uv tools, pnpm globals, fnm LTS
+  private      back up machine-local files (~/dotfiles-private/sync.sh)
 EOF
       exit 0 ;;
     *) print_error "Unknown option: $1"; exit 1 ;;
@@ -141,8 +142,22 @@ mod_toolchains() {
   fi
 }
 
+# ─── Module: Private overlay backup ────────────────────────────────────────
+# Optional private repo holding machine-local files kept out of this one.
+mod_private() {
+  print_header "Private overlay"
+
+  local sync="$HOME/dotfiles-private/sync.sh"
+  if [[ ! -x "$sync" ]]; then
+    print_skip "no ~/dotfiles-private — skipping"
+    return
+  fi
+
+  run "$sync"
+}
+
 # ─── Runner ─────────────────────────────────────────────────────────────────
-ALL_MODULES=(brew nvim tmux toolchains)
+ALL_MODULES=(brew nvim tmux toolchains private)
 
 run_module() {
   local name="$1"
@@ -151,6 +166,7 @@ run_module() {
     nvim)       mod_nvim ;;
     tmux)       mod_tmux ;;
     toolchains) mod_toolchains ;;
+    private)    mod_private ;;
     *) print_error "Unknown module: $name"; exit 1 ;;
   esac
 }

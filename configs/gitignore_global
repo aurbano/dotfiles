@@ -1,0 +1,19 @@
+# Global git ignores (core.excludesfile). Repo-specific ignores live in each repo.
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Local env files
+.env
+.env.local
+
+# Claude Code machine-local files
+**/.claude/settings.local.json
+**/.claude/.cc-writes/

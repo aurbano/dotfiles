@@ -31,3 +31,5 @@ __pycache__/
 
 # Stray logs (e.g. headless nvim)
 *.log
+
+**/.claude/.cc-writes/

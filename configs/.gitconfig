@@ -7,17 +7,13 @@
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	co = checkout
 
-    prune = fetch --prune
-    # Because I constantly forget how to do this
-    # https://git-scm.com/docs/git-fetch#git-fetch--p
+	undo = reset --soft HEAD^
+	# Not quite as common as an amend, but still common
+	# https://git-scm.com/docs/git-reset#git-reset-emgitresetemltmodegtltcommitgt
 
-    undo = reset --soft HEAD^
-    # Not quite as common as an amend, but still common
-    # https://git-scm.com/docs/git-reset#git-reset-emgitresetemltmodegtltcommitgt
-
-    stash-all = stash push --include-untracked
-    # We wanna grab those pesky un-added files!
-    # https://git-scm.com/docs/git-stash
+	stash-all = stash push --include-untracked
+	# We wanna grab those pesky un-added files!
+	# https://git-scm.com/docs/git-stash
 
 	# Show the diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
@@ -41,10 +37,9 @@
 	ui = auto
 
 [core]
-	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
+	excludesfile = ~/dotfiles/configs/gitignore_global
+	attributesfile = ~/dotfiles/configs/gitattributes_global
 	pager = delta
-	autocrlf = input
 	editor = nvim
 [color "branch"]
 	current = yellow reverse
@@ -60,9 +55,9 @@
 	changed = green
 	untracked = cyan
 [merge]
-    tool = opendiff
-    conflictstyle = diff3
-    autostash = true
+	tool = nvimdiff
+	conflictstyle = zdiff3
+	autostash = true
 
 [delta]
 	navigate = true
@@ -78,7 +73,7 @@
 	insteadOf = "git://github.com"
 	pushInsteadOf = "github:"
 	pushInsteadOf = "git://github.com/"
-    pushInsteadOf = "https://github.com/"
+	pushInsteadOf = "https://github.com/"
 [url "git@gist.github.com:"]
 	insteadOf = "gst:"
 	pushInsteadOf = "gist:"
@@ -86,16 +81,14 @@
 	pushInsteadOf = "https://gist.github.com/"
 
 [help]
-	autocorrect = 1
+	autocorrect = prompt
 
 # push easily. http://stackoverflow.com/a/23918418/89484
 [push]
 	default = simple
 	autoSetupRemote = true
+	followTags = true
 
-[include]
-  # For username / github token / etc
-  path = ~/.gitconfig.local
 [credential]
 	helper = osxkeychain
 [commit]
@@ -114,8 +107,22 @@
 	defaultBranch = main
 [rebase]
 	autoStash = true
+	autoSquash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[column]
+	ui = auto
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [user]
 	name = Alejandro Alvarez
 	email = aluralma@gmail.com
+
+# Machine-local identity, signing key and overrides. Last, so it wins.
+[include]
+	path = ~/.gitconfig.local

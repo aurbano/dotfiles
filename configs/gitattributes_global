@@ -1,0 +1,10 @@
+# Global attributes. Line-ending policy belongs in each repo's .gitattributes,
+# so nothing here rewrites text files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary

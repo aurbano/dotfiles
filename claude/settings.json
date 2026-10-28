@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
@@ -14,29 +15,23 @@
     "skill-creator@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
-    "Notion@claude-plugins-official": true,
     "notion@claude-plugins-official": true,
     "intercom@claude-plugins-official": true,
-    "zoom-plugin@claude-plugins-official": true
+    "zoom-plugin@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "bay": {
-      "source": {
-        "source": "github",
-        "repo": "runwayml/bay"
-      }
-    }
-  },
+  "extraKnownMarketplaces": {},
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "filesystem": {
       "allowWrite": [
-        "~/.1password"
+        "~/.1password",
+        "~/dev/worktrees"
       ]
     },
+    "enableWeakerNetworkIsolation": true,
     "excludedCommands": [
-      "bay *",
       "npm *",
       "npx *",
       "pnpm *",
@@ -47,10 +42,18 @@
       "AWS_PROFILE=* aws *",
       "kubectl *",
       "git *",
-      "trash *"
+      "grep *",
+      "rg *",
+      "ripgrep *",
+      "trash *",
+      "mktemp *"
     ]
   },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
   "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 3650,
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "voiceEnabled": true,

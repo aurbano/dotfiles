@@ -78,8 +78,6 @@ When adding dependencies, CI actions, or tool versions, always look up the curre
 
 Prefer `ast-grep` over ripgrep when searching for code structure (function calls, class definitions, imports, pattern matching across arguments). Use ripgrep for literal strings and log messages.
 
-**Heads up:** on this machine `grep` is aliased to `rg` in the interactive shell, so typing `grep` invokes ripgrep — whose flag set differs from GNU/BSD grep (e.g. `-E` is the default, `-P` is unsupported, `-r` is implicit, file-name filtering uses `--glob`/`--type`). Call `rg` directly and use its flags rather than relying on grep muscle memory.
-
 ### Python
 
 **Runtime:** 3.13 with `uv venv`
@@ -97,7 +95,7 @@ Tests in `tests/` directory mirroring package structure. Supply chain: `pip-audi
 
 ### Node/TypeScript
 
-**Runtime:** Node 22 LTS, ESM only (`"type": "module"`)
+**Runtime:** Node 24 LTS, ESM only (`"type": "module"`)
 
 | purpose | tool |
 |---------|------|
@@ -206,3 +204,7 @@ Pin actions to SHA hashes with version comments: `actions/checkout@<full-sha>  #
 Describe what the code does now — not discarded approaches, prior iterations, or alternatives. Only describe what's in the diff.
 
 Use plain, factual language. A bug fix is a bug fix, not a "critical stability improvement." Avoid: critical, crucial, essential, significant, comprehensive, robust, elegant.
+
+## Machine-local instructions
+
+@~/.claude/CLAUDE.local.md

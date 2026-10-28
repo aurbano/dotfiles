@@ -13,7 +13,3 @@ _cached_source atuin atuin init zsh --disable-up-arrow
 _cached_source zoxide zoxide init zsh
 _cached_source uv uv generate-shell-completion zsh
 _cached_source uvx uvx --generate-shell-completion zsh
-
-# ─── lazygit ────────────────────────────────────────────────────────────────
-export LG_CONFIG_FILE="$HOME/dotfiles/lazygit/config.yml"
-alias lzg='lazygit'

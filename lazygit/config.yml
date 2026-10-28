@@ -1,6 +1,0 @@
-# Loaded via LG_CONFIG_FILE (zsh/tools.zsh). Press `|` in a diff to cycle renderers.
-git:
-  diffRenderers:
-    - command: delta --{{colorScheme}} --paging=never
-    - type: extDiff
-      command: difft --color=always --background={{colorScheme}} --context={{diffContext}}

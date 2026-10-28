@@ -19,8 +19,6 @@ brew "git-delta"                   # diff
 # ─── Git & GitHub ────────────────────────────────────────────────────────────
 brew "git"
 brew "gh"
-brew "lazygit"                     # git TUI
-brew "difftastic"                  # structural diffs (`git dft`)
 
 # ─── GNU core utils ──────────────────────────────────────────────────────────
 brew "coreutils"

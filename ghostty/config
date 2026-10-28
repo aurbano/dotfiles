@@ -1,5 +1,5 @@
 # Font
-font-family = Hack Nerd Font Mono
+font-family = Hack Nerd Font
 font-size = 14
 
 # Theme (matches nvim catppuccin-mocha)
@@ -9,6 +9,3 @@ theme = Catppuccin Mocha
 background-image = ~/dotfiles/assets/kali.jpg
 background-image-opacity = 0.10
 background-image-fit = cover
-
-# Window
-window-decoration = true

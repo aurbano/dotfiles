@@ -33,8 +33,8 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("bufferline").setup({
+        highlights = require("catppuccin.special.bufferline").get_theme(),
         options = {
-          theme = "catppuccin",
           diagnostics = "nvim_lsp",
           offsets = {
             { filetype = "NvimTree", text = "Files", padding = 1 },
@@ -50,7 +50,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("lualine").setup({
-        options = { theme = "catppuccin" },
+        options = { theme = "catppuccin-nvim" },
       })
     end,
   },
@@ -58,16 +58,9 @@ return {
   -- Fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("telescope").setup({
-        defaults = {
-          preview = {
-            treesitter = false,
-          },
-        },
-      })
+      require("telescope").setup()
     end,
   },
 
@@ -76,14 +69,6 @@ return {
     "lewis6991/gitsigns.nvim",
     config = function()
       require("gitsigns").setup()
-    end,
-  },
-
-  -- Commenting
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
     end,
   },
 

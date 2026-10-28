@@ -19,14 +19,8 @@ map("n", "<C-y>", "3<C-y>", { desc = "Scroll up faster" })
 -- Better mark jumping (line + col)
 map("n", "'", "`", { desc = "Jump to mark with column" })
 
--- Yank to end of line
-map("n", "Y", "y$", { desc = "Yank to end of line" })
-
 -- Clear search highlight
 map("n", "<leader>qs", "<Esc>:noh<CR>", { silent = true, desc = "Clear search highlight" })
-
--- Sudo write
-map("n", "<leader>W", ":w !sudo tee %<CR>", { desc = "Sudo write" })
 
 -- Search and replace word under cursor
 map("n", "<leader>*", ':%s/\\<<C-r><C-w>\\>//<Left>', { desc = "Replace word under cursor" })

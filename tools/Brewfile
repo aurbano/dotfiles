@@ -71,4 +71,5 @@ cask "font-hack-nerd-font"         # nerd font for nvim/lualine icons
 
 # ─── Casks ───────────────────────────────────────────────────────────────────
 cask "ghostty"
+cask "raycast"                     # launcher on ⌘Space, clipboard history
 cask "suspicious-package"          # inspect .pkg installers

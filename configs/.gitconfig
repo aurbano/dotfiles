@@ -6,6 +6,10 @@
 	df = diff --color --color-words --abbrev
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	co = checkout
+	# difftastic: structural diffs that ignore formatting-only changes
+	dft = -c diff.external=difft diff
+	dlog = -c diff.external=difft log -p --ext-diff
+	dshow = -c diff.external=difft show --ext-diff
 
 	undo = reset --soft HEAD^
 	# Not quite as common as an amend, but still common

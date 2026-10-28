@@ -13,11 +13,14 @@ brew "fd"                          # find
 brew "ripgrep"                     # grep
 brew "zoxide"                      # cd
 brew "fzf"                         # fuzzy finder
+brew "atuin"                       # shell history search (Ctrl-R)
 brew "git-delta"                   # diff
 
 # ─── Git & GitHub ────────────────────────────────────────────────────────────
 brew "git"
 brew "gh"
+brew "lazygit"                     # git TUI
+brew "difftastic"                  # structural diffs (`git dft`)
 
 # ─── GNU core utils ──────────────────────────────────────────────────────────
 brew "coreutils"
@@ -51,10 +54,6 @@ brew "actionlint"                  # GitHub Actions linter
 brew "zizmor"                      # Actions security audit
 brew "macos-trash"                 # `trash` — safer rm
 brew "timvw/tap/wt"                # git worktree wrapper
-
-# ─── GPG (git signing uses SSH via 1Password; gpg is for encryption) ─────────
-brew "gnupg"
-brew "pinentry-mac"
 
 # ─── Node ────────────────────────────────────────────────────────────────────
 brew "fnm"                         # fast node manager

@@ -34,6 +34,7 @@ Run periodically to refresh Homebrew packages, Neovim plugins (lazy.nvim + trees
 | `tools/Brewfile` | All Homebrew dependencies |
 | `configs/.curlrc` | Sensible curl defaults |
 | `tmux/tmux.conf` | Tmux config — Catppuccin theme, vim bindings, session restore |
+| `atuin/`, `lazygit/` | atuin (Ctrl-R history search) and lazygit (`lzg`; delta, `\|` cycles to difftastic) configs |
 
 ## Neovim keymaps
 

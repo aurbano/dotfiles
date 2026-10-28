@@ -1,0 +1,3 @@
+# Loaded via ATUIN_CONFIG_DIR (zsh/tools.zsh). Everything else is atuin's default.
+# Homebrew handles upgrades, so don't ask atuin's server about new versions.
+update_check = false

@@ -30,10 +30,6 @@
 # export CPPFLAGS="-I$(brew --prefix)/opt/bzip2/include"
 # export PATH="$(brew --prefix)/opt/bzip2/bin:$PATH"
 
-# ─── SDKMAN (Java) ──────────────────────────────────────────────────────────
-# export SDKMAN_DIR="${HOME}/.sdkman"
-# [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-
 # ─── Conda / Miniforge ──────────────────────────────────────────────────────
 # __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
 # if [ $? -eq 0 ]; then

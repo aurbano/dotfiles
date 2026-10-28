@@ -1,17 +1,15 @@
-# ─── Single compinit with daily cache ────────────────────────────────────────
-# One compinit call for the entire session. Uses -C (cached) if dump is <24h old.
+# ─── Single compinit with daily security check ──────────────────────────────
+# One compinit call for the session. The full check (which also rewrites the
+# dump and picks up new completions) runs when the dump is missing or older
+# than 24 hours; otherwise -C trusts the cached dump.
 autoload -Uz compinit
-_comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-24))
-if (( ${#_comp_files} )); then
-  compinit -C
+_zcompdump=$ZSH_CACHE_DIR/zcompdump
+_stale_dump=($_zcompdump(N.mh+24))
+if [[ ! -s $_zcompdump ]] || (( ${#_stale_dump} )); then
+  compinit -d $_zcompdump
 else
-  compinit
+  compinit -C -d $_zcompdump
 fi
-unset _comp_files
-
-if command -v terraform &>/dev/null; then
-  autoload -U +X bashcompinit && bashcompinit
-  complete -o nospace -C "$(command -v terraform)" terraform
-fi
+unset _zcompdump _stale_dump
 
 zstyle ':completion:*' menu select

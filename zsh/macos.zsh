@@ -24,9 +24,16 @@ _macos_frontmost_app() {
 EOF
 }
 
+# Quote a string for an AppleScript literal: escape backslashes and quotes.
+_applescript_quote() {
+  local s=${1//\\/\\\\}
+  print -r -- "\"${s//\"/\\\"}\""
+}
+
 tab() {
-  local command="cd \\\"$PWD\\\"; clear"
-  (( $# > 0 )) && command="${command}; $*"
+  local dir=$(_applescript_quote "$PWD")
+  local cmd=$(_applescript_quote "$*")
+  local shell_cmd=$(_applescript_quote "cd ${(q)PWD}; clear${*:+; $*}")
 
   local the_app
   the_app=$(_macos_frontmost_app)
@@ -34,8 +41,11 @@ tab() {
   case "$the_app" in
     ghostty)
       osascript >/dev/null <<EOF
-        tell application "System Events"
-          tell process "Ghostty" to keystroke "t" using command down
+        tell application "Ghostty"
+          set cfg to new surface configuration
+          set initial working directory of cfg to ${dir}
+          if ${cmd} is not "" then set initial input of cfg to ${cmd} & linefeed
+          new tab in front window with configuration cfg
         end tell
 EOF
       ;;
@@ -44,15 +54,15 @@ EOF
         tell application "System Events"
           tell process "Terminal" to keystroke "t" using command down
         end tell
-        tell application "Terminal" to do script "${command}" in front window
+        tell application "Terminal" to do script ${shell_cmd} in front window
 EOF
       ;;
     iTerm2)
-      osascript <<EOF
+      osascript >/dev/null <<EOF
         tell application "iTerm2"
           tell current window
             create tab with default profile
-            tell current session to write text "${command}"
+            tell current session to write text ${shell_cmd}
           end tell
         end tell
 EOF

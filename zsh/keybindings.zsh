@@ -1,11 +1,5 @@
-# ─── History substring search (↑/↓) ──────────────────────────────────────────
-# The brew package loads the widgets but does not bind keys. Bind both the raw
-# escape sequences and the terminfo-resolved forms so it works under tmux and
-# terminals with non-standard terminfo.
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-[[ -n ${terminfo[kcuu1]} ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
-[[ -n ${terminfo[kcud1]} ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down
+# History substring search (↑/↓) is bound in .zshrc, right after the plugin
+# that defines its widgets is sourced.
 
 # ─── ESC-ESC: prepend sudo to current (or last) command ──────────────────────
 # Ported from ohmyzsh/plugins/sudo. Toggles `sudo` / `sudo -e` based on $EDITOR.

@@ -17,85 +17,32 @@ function serve() {
 }
 
 
-# whois a domain or a URL
-function whois() {
-	local domain=$(echo "$1" | awk -F/ '{print $3}') # get domain from URL
-	if [ -z "$domain" ] ; then
-		domain=$1
-	fi
-	echo "Getting whois record for: $domain …"
-	/usr/bin/whois -h whois.internic.net $domain | sed '/NOTICE:/q'
+# Extract an archive into a new directory named after it: extract <file>
+extract() {
+  [[ -f "$1" ]] || { echo "extract: '$1' is not a file" >&2; return 1; }
+  local file="${1:A}" dir="${${1:t}%%.*}"
+  [[ -e "$dir" ]] && { echo "extract: '$dir' already exists" >&2; return 1; }
+  mkdir -p "$dir" && cd "$dir" || return 1
+  case "$file" in
+    *.tar|*.tar.*|*.tgz|*.tbz|*.tbz2|*.tb2|*.txz|*.taz|*.zip|*.7z|*.rar|*.cpio|*.iso)
+      tar -xf "$file" ;;  # bsdtar (macOS tar) reads all of these
+    *.zst) zstd -d "$file" -o "${${file:t}%.zst}" ;;
+    *.xz)  xz -dk "$file" && mv "${file%.xz}" . ;;
+    *.gz)  gunzip -c "$file" > "${${file:t}%.gz}" ;;
+    *)     echo "extract: unsupported archive '$1'" >&2; cd .. && rmdir "$dir"; return 1 ;;
+  esac
 }
 
-
-# Extract archives - use: extract <file>
-# Based on http://dotfiles.org/~pseup/.bashrc
-function extract() {
-	if [ -f "$1" ] ; then
-		local filename=$(basename "$1")
-		local foldername="${filename%%.*}"
-		local fullpath=$(realpath "$1")
-		local didfolderexist=false
-		if [ -d "$foldername" ]; then
-			didfolderexist=true
-			read -rp "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
-			echo
-			if [[ $REPLY =~ ^[Nn]$ ]]; then
-				return
-			fi
-		fi
-		mkdir -p "$foldername" && cd "$foldername"
-		case $1 in
-			*.tar.bz2) tar xjf "$fullpath" ;;
-			*.tar.gz)  tar xzf "$fullpath" ;;
-			*.tar.xz)  tar Jxvf "$fullpath" ;;
-			*.tar.Z)   tar xzf "$fullpath" ;;
-			*.tar)     tar xf "$fullpath" ;;
-			*.taz)     tar xzf "$fullpath" ;;
-			*.tb2)     tar xjf "$fullpath" ;;
-			*.tbz)     tar xjf "$fullpath" ;;
-			*.tbz2)    tar xjf "$fullpath" ;;
-			*.tgz)     tar xzf "$fullpath" ;;
-			*.txz)     tar Jxvf "$fullpath" ;;
-			*.zip)     unzip "$fullpath" ;;
-			*.7z)      7z x "$fullpath" ;;
-			*.zst)     zstd -d "$fullpath" ;;
-			*.xz)      xz -d "$fullpath" ;;
-			*) echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
-		esac
-	else
-		echo "'$1' is not a valid file"
-	fi
-}
-
-# who is using the laptop's iSight camera?
-if [[ "$(uname)" == "Darwin" ]]; then
-  camerausedby() {
-      echo "Checking to see who is using the iSight camera… 📷"
-      usedby=$(lsof | grep -w "AppleCamera\|USBVDC\|iSight" | awk '{printf $2"\n"}' | xargs ps)
-      echo -e "Recent camera uses:\n$usedby"
-  }
-fi
-
-
-# animated gifs from any video
-# from alex sexton   gist.github.com/SlexAxton/4989674
+# Animated GIF from any video: gifify <video> [width]  (default width 600)
+# Two-pass palette keeps colours accurate without ImageMagick or gifsicle.
 gifify() {
-  if ! command -v ffmpeg &>/dev/null; then
-    echo "ffmpeg is required but not installed. Install with: brew install ffmpeg"
-    return 1
-  fi
-  if [[ -n "$1" ]]; then
-    if [[ $2 == '--good' ]]; then
-      ffmpeg -i $1 -r 10 -vcodec png out-static-%05d.png
-      time convert -verbose +dither -layers Optimize -resize 900x900\> out-static*.png  GIF:- | gifsicle --colors 128 --delay=5 --loop --optimize=3 --multifile - > $1.gif
-      rm out-static*.png
-    else
-      ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > $1.gif
-    fi
-  else
-    echo "proper usage: gifify <input_movie.mov>. You DO need to include extension."
-  fi
+  command -v ffmpeg &>/dev/null || { echo "gifify: ffmpeg is required (brew install ffmpeg)" >&2; return 1; }
+  [[ -f "$1" ]] || { echo "Usage: gifify <video> [width]" >&2; return 1; }
+  local width="${2:-600}"
+  local filters="fps=10,scale=${width}:-1:flags=lanczos"
+  ffmpeg -v warning -i "$1" \
+    -vf "${filters},split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5" \
+    -loop 0 "${1:r}.gif"
 }
 
 # Automatically list directory contents on `cd`.

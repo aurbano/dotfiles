@@ -1,27 +1,22 @@
 alias p="ps -m -o pid,user,%mem,args"
 
-# Sublime Text (only if installed)
-if [[ -d "/Applications/Sublime Text.app" ]]; then
-  alias st="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-fi
-
 alias hosts='sudo $EDITOR /etc/hosts'   # yes I occasionally 127.0.0.1 twitter.com ;)
 
 # GIT STUFF
 
-alias gclean='git branch --merged | grep -Ev "^\*|master|main|develop|staging" | xargs -r git branch -d'
+# Delete local branches already merged into the current one (keeps main-line branches).
+alias gclean='git branch --merged | command grep -Ev "^\*|^[[:space:]]*(master|main|develop|staging)$" | xargs -r git branch -d'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
-# All the dig info
-alias dig="dig +nocmd any +multiline +noall +answer"
+# Answer section only, multi-line records
+alias digs="dig +noall +answer +multiline"
 
-# Flush Directory Service cache
-alias flush="dscacheutil -flushcache"
-alias flushdns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
+# Flush the DNS cache
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 
 # Trim new lines and copy to clipboard
 alias trimcopy="tr -d '\n' | pbcopy"
@@ -32,34 +27,21 @@ alias cleands="command find . -name '*.DS_Store' -type f -delete"
 # File size
 alias fs="stat -f \"%z bytes\""
 
-# Empty the Trash on all mounted volumes and the main HDD
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
+# Empty the Trash through Finder (same as the menu item, no sudo rm)
+alias emptytrash="osascript -e 'tell application \"Finder\" to empty trash'"
 
-# Modern tool aliases (guarded)
+# Modern tools. Standard names (cat, ls, find, grep, diff) stay the real tools so
+# pasted commands, scripts and agent shells behave as documented.
 export LESS='-R --use-color'
 
 if command -v bat &>/dev/null; then
-  alias cat='bat --paging=never'
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 if command -v eza &>/dev/null; then
-  alias ls='eza --group-directories-first'
   alias ll='eza -l --group-directories-first'
   alias la='eza -la --group-directories-first'
   alias lt='eza --tree --level=2'
-fi
-
-if command -v fd &>/dev/null; then
-  alias find='fd'
-fi
-
-if command -v rg &>/dev/null; then
-  alias grep='rg'
-fi
-
-if command -v delta &>/dev/null; then
-  alias diff='delta'
 fi
 
 if command -v nvim &>/dev/null; then
@@ -75,9 +57,7 @@ alias tk='tmux kill-session'
 # iTerm2 tmux control mode — tmux windows/panes become native iTerm2 tabs/splits
 alias tit='tmux -CC new-session -A -s main'
 
-# Claude Code
-alias claude='claude --dangerously-skip-permissions'
-alias claudes='command claude'
+# Claude Code (permission mode comes from ~/.claude/settings.json)
 alias cc='claude'
 alias ccc='claude --continue'
 alias ccr='claude --resume'
